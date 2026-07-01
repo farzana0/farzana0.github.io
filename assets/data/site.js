@@ -57,7 +57,7 @@ window.SITE = {
   education: [
     { degree: "PhD, Computer Science", org: "Université de Montréal · Mila", period: "2021 – present", note: "Advisor: Guillaume Rabusseau. Tensor networks, explainability, AI safety." },
     { degree: "MSc, Computer Science", org: "York University, Toronto", period: "2019", note: "Evolving network representation learning (EvoNRL); dynamic graph embeddings." },
-    { degree: "BSc, Electrical Engineering", org: "Sharif University of Technology", period: "2012 – 2017", note: "" }
+    { degree: "BSc, Electrical Engineering", org: "Sharif University of Technology", period: "2012 – 2017", note: "Thesis: Study and Analysis of Wholesale Electricity Markets." }
   ],
 
   service: [
@@ -73,6 +73,22 @@ window.SITE = {
     { date: "2026", html: "<strong>TN-SHAP</strong> (<em>Tractable Shapley Values and Interactions via Tensor Networks</em>) accepted at <strong>AISTATS 2026</strong>." },
     { date: "2025-10", html: "TN-SHAP preprint released on <a href='https://arxiv.org/abs/2510.22138'>arXiv:2510.22138</a>." },
     { date: "2023", html: "<em>Explaining Graph Neural Networks Using Interpretable Local Surrogates</em> presented at <strong>TAG-ML</strong> (ICML 2023 workshop)." }
+  ],
+
+  /* ----------------------------------------------------------------------
+     Blog posts (newest first)
+     ---------------------------------------------------------------------- */
+  posts: [
+    {
+      id: "tnshap-series",
+      title: "From Shapley Values to Tensor Networks: The TN-SHAP Series",
+      date: "2026-07",
+      readingTime: "12 min read",
+      url: "blog/tnshap-series/",
+      tags: ["Explainable AI", "Tensor Networks", "Shapley Values"],
+      excerpt:
+        "One idea — the multilinear structure of coalition games — ties together tensor-network Shapley attribution across tabular models, graphs, and quantum neural networks."
+    }
   ],
 
   /* ----------------------------------------------------------------------
@@ -389,22 +405,27 @@ window.SITE = {
 
     {
       id: "bachelors-project",
-      title: "Undergraduate Capstone",
-      subtitle: "BSc, Electrical Engineering — Sharif University of Technology",
+      title: "Study and Analysis of Wholesale Electricity Markets",
+      subtitle: "BSc thesis · Electrical Engineering, Sharif University of Technology",
       category: "Bachelor's",
       featured: false,
       accent: "slate",
-      year: null,
-      status: { label: "TODO · pending CV", kind: "progress" },
-      tags: ["Electrical Engineering"],
+      year: 2017,
+      status: { label: "BSc Thesis · 2017", kind: "published" },
+      tags: ["Electricity Markets", "Econometrics", "Regression"],
       authors: "Farzaneh Heidari",
       venue: "Sharif University of Technology",
       teaser:
-        "Undergraduate capstone from my BSc in Electrical Engineering at Sharif University of Technology.",
+        "Predicting wholesale-electricity-market revenue under a pay-as-bid auction pricing rule, using regression models in STATA and MATLAB.",
       overview:
-        "TODO: I could not locate a CV on disk, so the details of my undergraduate capstone are not filled in here. Share the CV (or a short description) and this page will summarize the project — title, objective, methods, and outcome — without inventing anything.",
-      motivation: "TODO — pending CV.",
-      methods: ["TODO — pending CV: capstone objective and approach."],
+        "My undergraduate thesis studied how wholesale electricity markets clear and how the choice of auction <em>pricing rule</em> shapes the money that flows through them. In these markets, generators submit price–quantity bids into a periodic auction and a market operator dispatches the cheapest bids until demand is met. The pricing rule then decides what each accepted generator is paid: under a <strong>pay-as-bid</strong> rule, every accepted bid is paid exactly what it bid, rather than all accepted bids receiving a single uniform clearing price. The thesis focused on <strong>predicting the market's revenue under the pay-as-bid strategy</strong>, building regression models — estimated in <strong>STATA</strong> and <strong>MATLAB</strong> — that relate market revenue to bidding and demand conditions.",
+      motivation:
+        "Auction design is central to electricity markets: pay-as-bid and uniform-price rules give bidders different incentives and can produce very different revenues and prices. Being able to model and forecast revenue under a given pricing rule helps market designers and participants reason about the consequences of that choice before committing to it.",
+      methods: [
+        "Framed wholesale electricity procurement as a repeated auction with price–quantity bids settled under a pay-as-bid rule.",
+        "Specified econometric regression models relating market revenue to auction and demand variables.",
+        "Estimated and analysed the models in STATA (econometrics) and MATLAB (numerical regression)."
+      ],
       results: [],
       figures: [],
       poster: null,
