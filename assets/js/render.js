@@ -205,11 +205,11 @@
         ? '<div class="figure-grid">' + p.figures.map(function (f) {
             return '<figure><img src="' + esc(f.src) + '" alt="' + esc(f.caption) + '" loading="lazy"><figcaption>' + esc(f.caption) + '</figcaption></figure>';
           }).join("") + '</div>'
-        : '<p class="todo-note">Figures available in the linked paper / code. <em>TODO: embed a teaser figure here.</em></p>';
+        : "";
 
       var poster = p.poster
         ? '<p>' + linkPills({ poster: p.poster }, "pill") + '</p>'
-        : '<p class="todo-note">No poster yet. <em>TODO: add a poster PDF when available.</em></p>';
+        : "";
 
       var meta = [];
       if (p.authors) meta.push(esc(p.authors));

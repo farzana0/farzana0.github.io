@@ -217,8 +217,6 @@
             $$\phi_u = \int_0^1 \frac{\partial \hat{\nu}}{\partial z_u}(t\,\mathbf{1})\, dt,$$
             <p>evaluated exactly by polynomial interpolation at Chebyshev nodes (a Vandermonde solve). Order-2 interaction indices come from the same machinery, naturally read off on the graph's <em>edges</em>. On small graphs the method matches exact Shapley enumeration (order-1 cosine similarity above 0.98, order-2 above 0.95 on the toy benchmark) and it has been demonstrated on molecular benchmarks such as mutagenicity.</p>
 
-            <div class="todo-note">TODO: embed a representative figure or poster panel from the TN-SHAP-G (ICML&nbsp;2026) paper — e.g. a molecule with node/edge attributions. Point me at the figure and I'll drop it in with a caption.</div>
-
             <h2>5. TN-SHAP-Q — the quantum setting</h2>
             <p><a href="/project.html?id=tn-shap-q">TN-SHAP-Q</a> is the sharpest case, because here the multilinear structure is not fitted — it is <em>exact</em>. A single-frequency, angle-encoded quantum neural network (a single $R_Y$ rotation per feature) is <strong>exactly multilinear</strong> in the lifted features</p>
             $$\phi(x_i) = [\,1,\ \cos x_i,\ \sin x_i\,],$$
@@ -269,7 +267,7 @@
             <ul class="reading-list">
               <li><strong>TN-SHAP</strong> — <em>Tractable Shapley Values and Interactions via Tensor Networks.</em> F. Heidari, C. Li, G. Rabusseau. Accepted, AISTATS 2026. <a href="https://arxiv.org/abs/2510.22138">arXiv:2510.22138</a> · <a href="https://github.com/farzana0/TN-SHAP">code</a> · <a href="/project.html?id=tn-shap">project page</a></li>
               <li><strong>TN-SHAP-G</strong> — <em>Graph-Structured Tensor Network Surrogates for Shapley Values and Interactions.</em> F. Heidari, G. Rabusseau. Accepted, ICML 2026. <a href="https://arxiv.org/abs/2606.01540">arXiv:2606.01540</a> · <a href="https://github.com/farzana0/TN-SHAP-G">code</a> · <a href="/project.html?id=tn-shap-g">project page</a></li>
-              <li><strong>TN-SHAP-Q</strong> — <em>Exact Multilinear Extensions of Quantum Neural Networks for Shapley Attribution.</em> Manuscript / QTML abstract. <a href="https://github.com/farzana0/TN-SHAP-Q">code &amp; demo</a> · <a href="/project.html?id=tn-shap-q">project page</a>. <span class="muted">(arXiv / OpenReview link: TODO.)</span></li>
+              <li><strong>TN-SHAP-Q</strong> — <em>Exact Multilinear Extensions of Quantum Neural Networks for Shapley Attribution.</em> Manuscript / QTML abstract. <a href="https://github.com/farzana0/TN-SHAP-Q">code &amp; demo</a> · <a href="/project.html?id=tn-shap-q">project page</a></li>
             </ul>
             <p class="mt-2"><strong>Background</strong></p>
             <ul class="reading-list">
@@ -278,7 +276,6 @@
               <li>M. Grabisch &amp; M. Roubens. <em>An axiomatic approach to the concept of interaction among players in cooperative games.</em> IJGT, 1999.</li>
               <li>M. Schuld, R. Sweke, J. J. Meyer. <em>Effect of data encoding on the expressive power of variational quantum-machine-learning models.</em> Phys. Rev. A, 2021.</li>
             </ul>
-            <p class="muted"><strong>Posters:</strong> TODO — add AISTATS / ICML / QTML poster PDFs when available and they will be linked here and on the project pages.</p>
 
             <div class="mt-4"><a class="btn btn--ghost" href="/blog.html">← Back to blog</a></div>
           </div>

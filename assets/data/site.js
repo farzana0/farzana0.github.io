@@ -28,7 +28,7 @@ window.SITE = {
       dblp: "https://dblp.org/pid/231/1013.html",
       linkedin: "https://www.linkedin.com/in/farzaneh-heidari-32919653/",
       mila: "https://mila.quebec/en/person/farzaneh-heidari/",
-      cv: null /* TODO: add link to CV PDF once provided (e.g. assets/cv.pdf) */
+      cv: null
     }
   },
 
@@ -62,11 +62,11 @@ window.SITE = {
 
   service: [
     "Co-organizer, Tensor Network reading group (tensors, quantum theory & ML).",
-    "Reviewer for machine-learning venues. <!-- TODO: list specific venues/years if you'd like -->"
+    "Reviewer for machine-learning venues."
   ],
 
   /* ----------------------------------------------------------------------
-     News (most recent first). Keep factual; use TODO where unsure.
+     News (most recent first). Keep factual.
      ---------------------------------------------------------------------- */
   news: [
     { date: "2026-06", html: "<strong>TN-SHAP-G</strong> accepted at <strong>ICML 2026</strong> — deterministic Shapley values &amp; interactions for graph-structured data. Preprint on <a href='https://arxiv.org/abs/2606.01540'>arXiv:2606.01540</a>." },
@@ -125,7 +125,7 @@ window.SITE = {
         "Scales to high-dimensional problems (d ≈ 30–60) where enumeration is infeasible."
       ],
       figures: [],
-      poster: null, /* TODO: add poster link if available */
+      poster: null,
       links: {
         arxiv: "https://arxiv.org/abs/2510.22138",
         code: "https://github.com/farzana0/TN-SHAP"
@@ -164,7 +164,7 @@ window.SITE = {
         "Demonstrated on molecular benchmarks (e.g. mutagenicity)."
       ],
       figures: [],
-      poster: null, /* TODO */
+      poster: null,
       links: {
         arxiv: "https://arxiv.org/abs/2606.01540",
         code: "https://github.com/farzana0/TN-SHAP-G"
@@ -207,7 +207,7 @@ window.SITE = {
         { src: "assets/img/tnshapq_cost.png", caption: "Query cost vs. dimension: 2PM evaluations vs. 2ᴾ enumeration." },
         { src: "assets/img/tnshapq_shots.png", caption: "Shot-noise robustness of feature and gate attributions (∝ 1/√N)." }
       ],
-      poster: null, /* TODO: QTML poster if available */
+      poster: null,
       links: {
         code: "https://github.com/farzana0/TN-SHAP-Q"
       },
@@ -246,7 +246,7 @@ window.SITE = {
       figures: [],
       poster: null,
       links: {
-        code: "https://github.com/farzana0" /* TODO: exact repo (multilinear_safety_probe / low-rank-steering are private) */
+        code: "https://github.com/farzana0"
       },
       futureWork:
         "Scaling probes to larger models, causal validation of interaction directions, and connecting multilinear probes to the TN-SHAP interaction machinery."
