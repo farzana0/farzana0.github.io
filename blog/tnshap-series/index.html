@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>From Shapley Values to Tensor Networks: The TN-SHAP Series — Farzaneh Heidari</title>
+  <meta name="description" content="One idea — the multilinear structure of coalition games — unifies TN-SHAP, TN-SHAP-G, and TN-SHAP-Q: tensor-network Shapley attribution across tabular models, graphs, and quantum neural networks." />
+  <meta name="author" content="Farzaneh Heidari" />
+  <link rel="canonical" href="https://farzana0.github.io/blog/tnshap-series/" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="From Shapley Values to Tensor Networks: The TN-SHAP Series" />
+  <meta property="og:description" content="How TN-SHAP, TN-SHAP-G, and TN-SHAP-Q use multilinear structure and tensor-network surrogates to make Shapley values and interactions scalable across tabular, graph, and quantum models." />
+  <meta property="og:url" content="https://farzana0.github.io/blog/tnshap-series/" />
+  <meta property="og:image" content="https://farzana0.github.io/assets/img/og-image.svg" />
+  <meta property="article:author" content="Farzaneh Heidari" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="From Shapley Values to Tensor Networks: The TN-SHAP Series" />
+  <meta name="twitter:description" content="Multilinear structure + tensor networks for scalable Shapley attribution across tabular, graph, and quantum models." />
+  <meta name="twitter:image" content="https://farzana0.github.io/assets/img/og-image.svg" />
+
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+
+  <!-- KaTeX for readable math (degrades to raw TeX if offline) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "From Shapley Values to Tensor Networks: The TN-SHAP Series",
+    "author": { "@type": "Person", "name": "Farzaneh Heidari", "url": "https://farzana0.github.io/" },
+    "datePublished": "2026-07",
+    "url": "https://farzana0.github.io/blog/tnshap-series/",
+    "keywords": ["Shapley values", "tensor networks", "explainable AI", "graph neural networks", "quantum machine learning"]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/index.html"><img class="mark" src="/assets/img/favicon.svg" alt="" width="26" height="26" />Farzaneh Heidari</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/projects.html" data-match="project">Projects</a></li>
+        <li><a href="/publications.html">Publications</a></li>
+        <li><a href="/blog.html" data-match="blog">Blog</a></li>
+        <li><a href="/news.html">News</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        </button>
+        <button class="icon-btn nav-toggle" data-nav-toggle aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <header class="post-hero">
+        <div class="container">
+          <nav class="breadcrumb"><a href="/index.html">Home</a> / <a href="/blog.html">Blog</a> / TN-SHAP Series</nav>
+          <div class="post-meta">Jul 2026 · 12 min read · Farzaneh Heidari</div>
+          <h1>From Shapley Values to Tensor Networks: The TN-SHAP Series</h1>
+          <p class="dek">One idea — the multilinear structure of coalition games — ties together three projects on scalable, structured feature attribution across tabular models, graphs, and quantum neural networks.</p>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <div class="container">
+          <div class="prose">
+
+            <h2>1. Introduction</h2>
+            <p><strong>Feature attribution</strong> answers a deceptively simple question: <em>which inputs drove this prediction, and by how much?</em> Good answers matter for trust and debugging, for scientific discovery, and — increasingly — for safety, where we want to know what a model is actually keying on.</p>
+            <p><strong>Shapley values</strong>, borrowed from cooperative game theory, are among the most principled ways to answer it. They are the unique attribution satisfying a short list of natural axioms (efficiency, symmetry, dummy, linearity), which is why they underpin methods like SHAP. But that principle comes at a price: computing a Shapley value exactly requires reasoning over <em>all</em> $2^n$ subsets of features, and higher-order <em>interactions</em> are worse still. Sampling estimators such as KernelSHAP trade accuracy for speed, and they are especially noisy for interactions.</p>
+            <p>The TN-SHAP series is built on one observation that turns this exponential problem into a tractable, linear-algebraic one:</p>
+
+            <div class="callout">
+              <span class="label">The central idea</span>
+              <p>The mathematical object behind Shapley values — the <strong>multilinear extension</strong> of the coalition game — is a tensor. When that tensor is low-rank (or, for some models, exactly structured), a <strong>tensor network</strong> represents it compactly, and the exponential sum over coalitions becomes a cheap tensor contraction.</p>
+            </div>
+
+            <p>Three projects instantiate this backbone in three different worlds: <strong>TN-SHAP</strong> for tabular models, <strong>TN-SHAP-G</strong> for graphs, and <strong>TN-SHAP-Q</strong> for quantum neural networks.</p>
+
+            <figure class="diagram-wrap">
+              <svg class="diagram" viewBox="0 0 900 400" role="img" aria-label="Pipeline: a masked coalition game becomes a multilinear extension, represented as a tensor-network object, instantiated for tabular (TN-SHAP), graph (TN-SHAP-G) and quantum (TN-SHAP-Q) models, all yielding Shapley values and interaction indices.">
+                <defs>
+                  <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L8 4.5 L0 9 z" fill="var(--text-faint)"/></marker>
+                </defs>
+                <!-- pipeline row -->
+                <g font-family="Inter, sans-serif">
+                  <g>
+                    <rect x="20" y="24" width="250" height="72" rx="12" fill="var(--surface)" stroke="var(--border-strong)"/>
+                    <text x="145" y="54" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Masked coalition game</text>
+                    <text x="145" y="76" text-anchor="middle" font-size="14" fill="var(--text-soft)">v(S) = f(x masked to S)</text>
+                  </g>
+                  <line x1="272" y1="60" x2="322" y2="60" stroke="var(--text-faint)" stroke-width="1.6" marker-end="url(#ah)"/>
+                  <g>
+                    <rect x="325" y="24" width="250" height="72" rx="12" fill="var(--surface)" stroke="var(--border-strong)"/>
+                    <text x="450" y="54" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Multilinear extension</text>
+                    <text x="450" y="76" text-anchor="middle" font-size="14" fill="var(--text-soft)">F(z),  z in [0,1]ⁿ</text>
+                  </g>
+                  <line x1="577" y1="60" x2="627" y2="60" stroke="var(--text-faint)" stroke-width="1.6" marker-end="url(#ah)"/>
+                  <g>
+                    <rect x="630" y="24" width="250" height="72" rx="12" fill="var(--accent-soft)" stroke="var(--accent)"/>
+                    <text x="755" y="54" text-anchor="middle" font-size="15" font-weight="600" fill="var(--accent)">Tensor-network object</text>
+                    <text x="755" y="76" text-anchor="middle" font-size="14" fill="var(--text-soft)">bond dimension χ</text>
+                  </g>
+                </g>
+                <!-- bus down to three domains -->
+                <path d="M755 96 L755 128 L160 128 L160 168" fill="none" stroke="var(--text-faint)" stroke-width="1.6"/>
+                <path d="M450 128 L450 168" fill="none" stroke="var(--text-faint)" stroke-width="1.6"/>
+                <path d="M740 128 L740 168" fill="none" stroke="var(--text-faint)" stroke-width="1.6" marker-end="url(#ah)"/>
+                <path d="M160 158 L160 168" fill="none" stroke="var(--text-faint)" stroke-width="1.6" marker-end="url(#ah)"/>
+                <path d="M450 158 L450 168" fill="none" stroke="var(--text-faint)" stroke-width="1.6" marker-end="url(#ah)"/>
+                <!-- domain cards -->
+                <g font-family="Inter, sans-serif">
+                  <g>
+                    <rect x="30" y="170" width="260" height="118" rx="12" fill="var(--surface)" stroke="var(--border-strong)"/>
+                    <text x="160" y="202" text-anchor="middle" font-size="16" font-weight="700" fill="var(--text)">TN-SHAP</text>
+                    <text x="160" y="224" text-anchor="middle" font-size="13.5" fill="var(--text-soft)">Tabular models</text>
+                    <!-- table glyph -->
+                    <g stroke="var(--accent)" stroke-width="1.5" fill="none">
+                      <rect x="118" y="240" width="84" height="34" rx="4"/>
+                      <line x1="118" y1="251" x2="202" y2="251"/><line x1="146" y1="240" x2="146" y2="274"/><line x1="174" y1="240" x2="174" y2="274"/>
+                    </g>
+                  </g>
+                  <g>
+                    <rect x="320" y="170" width="260" height="118" rx="12" fill="var(--surface)" stroke="var(--border-strong)"/>
+                    <text x="450" y="202" text-anchor="middle" font-size="16" font-weight="700" fill="var(--text)">TN-SHAP-G</text>
+                    <text x="450" y="224" text-anchor="middle" font-size="13.5" fill="var(--text-soft)">Graph models</text>
+                    <!-- graph glyph -->
+                    <g stroke="var(--accent)" stroke-width="1.5">
+                      <line x1="430" y1="248" x2="470" y2="248"/><line x1="430" y1="248" x2="450" y2="272"/><line x1="470" y1="248" x2="450" y2="272"/>
+                      <circle cx="430" cy="248" r="4.5" fill="var(--accent)"/><circle cx="470" cy="248" r="4.5" fill="var(--accent)"/><circle cx="450" cy="272" r="4.5" fill="var(--accent)"/>
+                    </g>
+                  </g>
+                  <g>
+                    <rect x="610" y="170" width="260" height="118" rx="12" fill="var(--surface)" stroke="var(--border-strong)"/>
+                    <text x="740" y="202" text-anchor="middle" font-size="16" font-weight="700" fill="var(--text)">TN-SHAP-Q</text>
+                    <text x="740" y="224" text-anchor="middle" font-size="13.5" fill="var(--text-soft)">Quantum neural nets</text>
+                    <!-- circuit glyph -->
+                    <g stroke="var(--accent)" stroke-width="1.5" fill="none">
+                      <line x1="705" y1="250" x2="775" y2="250"/><line x1="705" y1="266" x2="775" y2="266"/>
+                      <rect x="722" y="242" width="16" height="16" rx="3" fill="var(--accent-soft)"/>
+                      <circle cx="756" cy="250" r="4" fill="var(--accent)"/><line x1="756" y1="250" x2="756" y2="266"/><circle cx="756" cy="266" r="3" fill="var(--accent)"/>
+                    </g>
+                  </g>
+                </g>
+                <!-- down to output -->
+                <path d="M160 288 L160 330" fill="none" stroke="var(--text-faint)" stroke-width="1.6"/>
+                <path d="M450 288 L450 330" fill="none" stroke="var(--text-faint)" stroke-width="1.6"/>
+                <path d="M740 288 L740 330" fill="none" stroke="var(--text-faint)" stroke-width="1.6"/>
+                <line x1="160" y1="330" x2="740" y2="330" stroke="var(--text-faint)" stroke-width="1.6"/>
+                <path d="M450 330 L450 350" fill="none" stroke="var(--text-faint)" stroke-width="1.6" marker-end="url(#ah)"/>
+                <g font-family="Inter, sans-serif">
+                  <rect x="250" y="352" width="400" height="40" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/>
+                  <text x="450" y="377" text-anchor="middle" font-size="14.5" font-weight="600" fill="var(--accent)">Shapley values φᵢ  ·  interaction indices Iᵢⱼ</text>
+                </g>
+              </svg>
+              <figcaption>The shared backbone: a masked coalition game becomes a multilinear extension, compressed into a tensor-network object, and instantiated for three domains — all yielding the same attribution quantities.</figcaption>
+            </figure>
+
+            <h2>2. The common framework</h2>
+            <p>Everything below rests on four objects.</p>
+
+            <h3>Coalition games</h3>
+            <p>Fix an input $x$ with $n$ features and a baseline (a reference "off" value for each feature). For a subset $S \subseteq [n]$, let $x_S$ be $x$ with the features outside $S$ replaced by their baseline. The <em>coalition game</em> is the set function</p>
+            $$v : 2^{[n]} \to \mathbb{R}, \qquad v(S) = f(x_S),$$
+            <p>the model's output when only the features in $S$ are "present." This is the game whose players are features (or, later, graph nodes or circuit gates).</p>
+
+            <h3>Multilinear extensions</h3>
+            <p>Owen's <em>multilinear extension</em> lifts this discrete game to a smooth function on the cube $[0,1]^n$, where each coordinate $z_i$ is the probability that feature $i$ is present:</p>
+            $$F(z) = \sum_{S \subseteq [n]} v(S) \prod_{i \in S} z_i \prod_{i \notin S} (1 - z_i), \qquad z \in [0,1]^n.$$
+            <p>$F$ is <strong>multilinear</strong>: affine in each coordinate separately. It agrees with the game on the cube's corners, $F(\mathbf{1}_S) = v(S)$, so it loses no information — it just makes the game differentiable.</p>
+
+            <h3>Shapley values &amp; interactions</h3>
+            <p>The Shapley value has a clean closed form as a <em>diagonal integral</em> of this extension (Owen):</p>
+            $$\phi_i = \int_0^1 \frac{\partial F}{\partial z_i}(t, t, \dots, t)\, dt.$$
+            <p>Reading a feature's importance is thus <em>differentiate the extension, then integrate along the diagonal</em>. Second-order Shapley interaction indices $I_{ij}$ come from the mixed partials $\partial^2 F / \partial z_i \partial z_j$, and order-$k$ interactions from $k$-th mixed partials.</p>
+
+            <h3>Tensor-network compression</h3>
+            <p>Written out, $F$ has $2^n$ coefficients — one per coalition — so nothing has been gained yet. The key move is that $F$ can be viewed as a <strong>tensor</strong>, and for many models that tensor is (approximately) low-rank. Representing it as a tensor network with bond dimension $\chi$ makes the derivatives and diagonal integrals above into contractions of small cores.</p>
+
+            <div class="callout">
+              <span class="label">Why this is fast</span>
+              <p>Once $F$ lives in a tensor network of cut-rank $\chi$, order-1 and order-2 Shapley quantities can be read off in roughly $O\!\left(n\,\mathrm{poly}(\chi) + n^2\right)$ time — instead of summing over $2^n$ coalitions. The exponential sum has become a contraction.</p>
+            </div>
+
+            <h2>3. TN-SHAP — the tabular setting</h2>
+            <p><a href="/project.html?id=tn-shap">TN-SHAP</a> is the base case: a tabular predictor $f$. It fits a <em>feature-mapped tensor-network surrogate</em> (a binary tensor tree / MPS-style factorization) to the local coalition game around a point of interest, so the model's local behavior is written as a factorized multilinear map.</p>
+            <p><strong>Core contribution.</strong> Once the surrogate is fit, order-1 and order-2 Shapley interactions are computed exactly <em>on the surrogate</em> in $O(n\,\mathrm{poly}(\chi) + n^2)$ time, where $\chi$ is the tensor network's maximal cut rank. On UCI benchmarks (Diabetes, Concrete, Energy, California Housing) this matches exact enumeration on the fitted surrogate while delivering <strong>25–1000× wall-clock speedups over KernelSHAP-IQ</strong>, and it scales to dozens of features where enumeration is hopeless.</p>
+
+            <figure>
+              <img src="/assets/img/blog/tnshap_training_dynamics.png" alt="Training curves: overall surrogate fit (Train R squared) and Shapley-interaction fidelity for orders 1, 2 and 3 rising over epochs." loading="lazy" />
+              <figcaption>As the tensor-network surrogate trains, it recovers not just the prediction (Train&nbsp;$R^2$) but the order-1, order-2, and order-3 Shapley interaction indices (SII&nbsp;$R^2$). Higher-order interactions are learned last. <span class="muted">(From the TN-SHAP / AISTATS 2026 materials.)</span></figcaption>
+            </figure>
+
+            <h2>4. TN-SHAP-G — the graph setting</h2>
+            <p><a href="/project.html?id=tn-shap-g">TN-SHAP-G</a> moves to graph-structured inputs, where the model is $f(G, X)$ and the players are nodes. The masked graph game is $v(S) = f(G, X_S)$, with excluded nodes set to a baseline.</p>
+            <p><strong>Graph-aware coalitions.</strong> Instead of a generic surrogate, TN-SHAP-G learns one whose <em>topology mirrors the graph</em>: a tensor core per node, with physical dimension 2 (in / out of the coalition) and a bond of dimension $\chi$ along each incident edge. The surrogate therefore respects the graph's connectivity by construction.</p>
+            <p><strong>Node and edge attributions.</strong> Because the surrogate is a clean multilinear object, node Shapley values are computed <strong>deterministically</strong> — no Monte-Carlo sampling — via the same diagonal-derivative integral,</p>
+            $$\phi_u = \int_0^1 \frac{\partial \hat{\nu}}{\partial z_u}(t\,\mathbf{1})\, dt,$$
+            <p>evaluated exactly by polynomial interpolation at Chebyshev nodes (a Vandermonde solve). Order-2 interaction indices come from the same machinery, naturally read off on the graph's <em>edges</em>. On small graphs the method matches exact Shapley enumeration (order-1 cosine similarity above 0.98, order-2 above 0.95 on the toy benchmark) and it has been demonstrated on molecular benchmarks such as mutagenicity.</p>
+
+            <div class="todo-note">TODO: embed a representative figure or poster panel from the TN-SHAP-G (ICML&nbsp;2026) paper — e.g. a molecule with node/edge attributions. Point me at the figure and I'll drop it in with a caption.</div>
+
+            <h2>5. TN-SHAP-Q — the quantum setting</h2>
+            <p><a href="/project.html?id=tn-shap-q">TN-SHAP-Q</a> is the sharpest case, because here the multilinear structure is not fitted — it is <em>exact</em>. A single-frequency, angle-encoded quantum neural network (a single $R_Y$ rotation per feature) is <strong>exactly multilinear</strong> in the lifted features</p>
+            $$\phi(x_i) = [\,1,\ \cos x_i,\ \sin x_i\,],$$
+            <p>the single-frequency case of the finite Fourier structure of such circuits (Schuld–Sweke–Meyer). When you mask features (or remove gates) against a baseline, <em>the multilinear extension of the induced game is the very function the circuit already computes</em> — no surrogate required.</p>
+            <p><strong>Feature and gate attribution.</strong> First-order Shapley values are then the Owen diagonal integral</p>
+            $$\phi_i = \int_0^1 \partial_i F(t\,\mathbf{1})\, dt,$$
+            <p>whose integrand is a polynomial of degree at most $P-1$ in $t$ (for $P$ players), so <strong>$M$-point Gauss–Legendre quadrature is exact once $M \ge \lceil P/2 \rceil$</strong>. That costs $2PM$ circuit evaluations versus $2^P$ for coalition enumeration, and the same construction attributes <em>gates</em> as well as features. Order-$k$ interactions come from the same extension, with a threshold that <em>decreases</em> with interaction order.</p>
+
+            <figure>
+              <img src="/assets/img/tnshapq_cost.png" alt="Query cost versus dimension: the Owen-integral method grows polynomially while exact coalition enumeration grows as 2 to the P." loading="lazy" />
+              <figcaption>Query cost versus problem size: the Owen-integral route uses $2PM$ circuit evaluations, against $2^P$ for exact coalition enumeration. <span class="muted">(From the public TN-SHAP-Q demo.)</span></figcaption>
+            </figure>
+
+            <div class="callout">
+              <span class="label">Exactness</span>
+              <p>Because the QNN really is multilinear, TN-SHAP-Q's attributions agree with exact $2^P$ coalition enumeration to machine precision (about $10^{-16}$) across the demo's experiments, and its finite-shot estimates are unbiased in expectation with variance falling as $1/N$ shots.</p>
+            </div>
+
+            <h2>6. Why this is one research program</h2>
+            <p>The three projects look like they belong to different fields — tabular ML, graph learning, quantum computing — but they are the same idea seen three times.</p>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Project</th><th>Domain</th><th>The multilinear object</th><th>How Shapley is computed</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>TN-SHAP</strong></td><td>Tabular models</td><td>Fitted tensor-tree / MPS surrogate</td><td>Contractions on the surrogate, orders 1–2</td></tr>
+                  <tr><td><strong>TN-SHAP-G</strong></td><td>Graph models</td><td>Graph-aligned tensor network</td><td>Deterministic diagonal integral (Chebyshev / Vandermonde)</td></tr>
+                  <tr><td><strong>TN-SHAP-Q</strong></td><td>Quantum neural nets</td><td>Exact — the circuit itself</td><td>Owen integral by Gauss–Legendre, exact at $M \ge \lceil P/2\rceil$</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>The backbone is identical: <em>coalition game → multilinear extension → a compact tensor object → contractions for values and interactions.</em> What changes is only how that tensor object is obtained — fitted, graph-aligned, or exact — and which players it acts on — features, nodes, or gates. In every case the payoff is the same: <strong>scalable attribution</strong> and <strong>structured interactions</strong>, with interpretability recast as <em>multilinear analysis</em>.</p>
+
+            <h2>7. Open directions</h2>
+            <p>The multilinear lens does not stop at attribution. A few directions I am pursuing pick up the same interaction-centric view for interpretability and AI safety:</p>
+            <ul>
+              <li><a href="/project.html?id=multilinear-steering"><strong>Multilinear steering</strong></a> — extending linear probes with low-rank quadratic (bilinear) terms to read and <em>steer</em> concepts that live in interactions between directions, not single directions.</li>
+              <li><a href="/project.html?id=evaluation-awareness"><strong>Evaluation awareness</strong></a> — measuring whether language models behave differently when they believe they are being tested, in behaviour and in activation space.</li>
+              <li><strong>Honesty and interaction effects</strong> — asking whether safety-relevant concepts such as honesty are encoded as interactions, where a purely linear probe would miss them.</li>
+              <li><strong>AI-safety monitoring</strong> — turning scalable attribution and interaction indices into auditing tools for deployed models and agents.</li>
+            </ul>
+
+            <h2>8. References &amp; links</h2>
+            <p><strong>The TN-SHAP series</strong></p>
+            <ul class="reading-list">
+              <li><strong>TN-SHAP</strong> — <em>Tractable Shapley Values and Interactions via Tensor Networks.</em> F. Heidari, C. Li, G. Rabusseau. Accepted, AISTATS 2026. <a href="https://arxiv.org/abs/2510.22138">arXiv:2510.22138</a> · <a href="https://github.com/farzana0/TN-SHAP">code</a> · <a href="/project.html?id=tn-shap">project page</a></li>
+              <li><strong>TN-SHAP-G</strong> — <em>Graph-Structured Tensor Network Surrogates for Shapley Values and Interactions.</em> F. Heidari, G. Rabusseau. Accepted, ICML 2026. <a href="https://arxiv.org/abs/2606.01540">arXiv:2606.01540</a> · <a href="https://github.com/farzana0/TN-SHAP-G">code</a> · <a href="/project.html?id=tn-shap-g">project page</a></li>
+              <li><strong>TN-SHAP-Q</strong> — <em>Exact Multilinear Extensions of Quantum Neural Networks for Shapley Attribution.</em> Manuscript / QTML abstract. <a href="https://github.com/farzana0/TN-SHAP-Q">code &amp; demo</a> · <a href="/project.html?id=tn-shap-q">project page</a>. <span class="muted">(arXiv / OpenReview link: TODO.)</span></li>
+            </ul>
+            <p class="mt-2"><strong>Background</strong></p>
+            <ul class="reading-list">
+              <li>L. S. Shapley. <em>A Value for n-Person Games.</em> 1953.</li>
+              <li>G. Owen. <em>Multilinear Extensions of Games.</em> Management Science, 1972.</li>
+              <li>M. Grabisch &amp; M. Roubens. <em>An axiomatic approach to the concept of interaction among players in cooperative games.</em> IJGT, 1999.</li>
+              <li>M. Schuld, R. Sweke, J. J. Meyer. <em>Effect of data encoding on the expressive power of variational quantum-machine-learning models.</em> Phys. Rev. A, 2021.</li>
+            </ul>
+            <p class="muted"><strong>Posters:</strong> TODO — add AISTATS / ICML / QTML poster PDFs when available and they will be linked here and on the project pages.</p>
+
+            <div class="mt-4"><a class="btn btn--ghost" href="/blog.html">← Back to blog</a></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© <span id="year"></span> Farzaneh Heidari</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/about.html">About</a><a href="/projects.html">Projects</a><a href="/publications.html">Publications</a><a href="/blog.html">Blog</a><a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

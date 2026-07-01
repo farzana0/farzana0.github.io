@@ -33,15 +33,17 @@
       });
     }
 
-    // active nav link
-    var path = location.pathname.split("/").pop() || "index.html";
+    // active nav link (handles root, section pages, and nested dir pages like /blog/...)
+    var full = location.pathname.replace(/\/index\.html$/, "/");
+    var file = full.substring(full.lastIndexOf("/") + 1);
     document.querySelectorAll(".nav-links a").forEach(function (a) {
-      var href = a.getAttribute("href");
-      if (!href) return;
-      if (href === path || (path === "" && href === "index.html") ||
-          (a.dataset.match && path.indexOf(a.dataset.match) === 0)) {
-        a.classList.add("active");
-      }
+      var href = (a.getAttribute("href") || "").replace(/^\//, "");
+      var match = a.dataset.match;
+      var active = false;
+      if (match && full.indexOf("/" + match) === 0) active = true;
+      else if (href && file && href === file) active = true;
+      else if ((full === "/" || full === "") && href === "index.html") active = true;
+      if (active) a.classList.add("active");
     });
 
     window.revealNow(document);

@@ -322,6 +322,42 @@ p { margin: 0 0 1.1rem; }
 .footer-nav { display: flex; gap: 1.3rem; flex-wrap: wrap; }
 .footer-nav a { color: var(--text-soft); font-size: 0.86rem; }
 
+/* ---------------------------------------------------------------- blog */
+.post-hero { padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(1.6rem, 3vw, 2.2rem); border-bottom: 1px solid var(--border); }
+.post-hero .breadcrumb { margin-bottom: 1.2rem; }
+.post-hero h1 { font-size: clamp(2rem, 4.8vw, 3.1rem); margin: 0.6rem 0 1rem; max-width: 20ch; }
+.post-hero .dek { font-size: 1.15rem; color: var(--text-soft); max-width: 56ch; margin: 0; }
+.post-meta { color: var(--text-faint); font-size: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem; align-items: center; }
+.post-body { padding: clamp(2rem, 5vw, 3.5rem) 0 var(--space); }
+.post-body .prose { margin: 0 auto; }
+.post-body h2 { margin: 2.8rem 0 1rem; }
+.post-body h2:first-of-type { margin-top: 0; }
+.post-body figure { margin: 2rem 0; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--surface); }
+.post-body figure img { width: 100%; background: #fff; display: block; }
+.post-body figure figcaption { font-size: 0.85rem; color: var(--text-faint); padding: 0.75rem 0.95rem; }
+
+/* key-idea callout */
+.callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 1rem 1.25rem; margin: 1.8rem 0; }
+.callout p { color: var(--text); margin: 0; }
+.callout p + p { margin-top: 0.6rem; }
+.callout .label { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.45rem; }
+
+/* unifying diagram */
+.diagram { width: 100%; height: auto; display: block; margin: 1.6rem 0; }
+.diagram-wrap { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); padding: 1.4rem; margin: 1.8rem 0; }
+.diagram-wrap figcaption { font-size: 0.85rem; color: var(--text-faint); margin-top: 0.6rem; text-align: center; }
+
+/* compact comparison table */
+.post-body .table-wrap { overflow-x: auto; margin: 1.6rem 0; }
+.post-body table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.post-body th, .post-body td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.post-body thead th { color: var(--text-faint); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.03em; text-transform: uppercase; }
+.post-body tbody tr:last-child td { border-bottom: 0; }
+
+/* KaTeX: keep long display math scrollable on mobile */
+.katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.3rem 0; margin: 1.3rem 0; }
+.katex { font-size: 1.05em; }
+
 /* subtle scroll reveal (scroll-triggered, not autoplay) */
 .reveal { opacity: 0; transform: translateY(10px); transition: opacity 0.55s ease, transform 0.55s ease; }
 .reveal.in { opacity: 1; transform: none; }

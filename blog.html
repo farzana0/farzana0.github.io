@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project — Farzaneh Heidari</title>
-  <meta name="description" content="Project detail — Farzaneh Heidari." />
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content="Project — Farzaneh Heidari" />
-  <meta property="og:description" content="Project detail — Farzaneh Heidari." />
+  <title>Blog — Farzaneh Heidari</title>
+  <meta name="description" content="Writing by Farzaneh Heidari on explainable AI, tensor networks, Shapley values, and AI safety." />
+  <link rel="canonical" href="https://farzana0.github.io/blog.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Blog — Farzaneh Heidari" />
+  <meta property="og:description" content="Notes on explainable AI, tensor networks, Shapley values, and AI safety." />
+  <meta property="og:url" content="https://farzana0.github.io/blog.html" />
   <meta property="og:image" content="https://farzana0.github.io/assets/img/og-image.svg" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
@@ -19,7 +21,7 @@
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Primary">
-      <a class="brand" href="index.html"><img class="mark" src="assets/img/favicon.svg" alt="" width="30" height="30" />Farzaneh Heidari</a>
+      <a class="brand" href="index.html"><img class="mark" src="assets/img/favicon.svg" alt="" width="26" height="26" />Farzaneh Heidari</a>
       <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
@@ -42,19 +44,22 @@
     </nav>
   </header>
 
-  <main id="project-detail">
-    <noscript>
-      <div class="container section">
-        <p>This project page renders from structured data with JavaScript. Please enable JavaScript, or browse all projects on the <a href="projects.html">Projects</a> page.</p>
+  <main>
+    <section class="section">
+      <div class="container">
+        <p class="kicker reveal">Blog</p>
+        <h1 class="reveal">Writing</h1>
+        <p class="muted reveal" style="max-width:56ch">Occasional notes that connect the threads across my research — explainability, tensor methods, and AI safety.</p>
+        <div class="card-grid mt-3" id="post-list"></div>
       </div>
-    </noscript>
+    </section>
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>© <span id="year"></span> Farzaneh Heidari · Built with plain HTML, CSS &amp; JS.</p>
+      <p>© <span id="year"></span> Farzaneh Heidari</p>
       <nav class="footer-nav" aria-label="Footer">
-        <a href="about.html">About</a><a href="projects.html">Projects</a><a href="publications.html">Publications</a><a href="blog.html">Blog</a><a href="cv.html">CV</a><a href="contact.html">Contact</a>
+        <a href="about.html">About</a><a href="projects.html">Projects</a><a href="publications.html">Publications</a><a href="blog.html">Blog</a><a href="contact.html">Contact</a>
       </nav>
     </div>
   </footer>
@@ -64,7 +69,7 @@
   <script src="assets/js/render.js"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
-    Render.projectDetail();
+    Render.posts("post-list");
   </script>
 </body>
 </html>

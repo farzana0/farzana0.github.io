@@ -154,6 +154,22 @@
       }).join("");
     },
 
+    posts: function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      var posts = SITE.posts || [];
+      if (!posts.length) { el.innerHTML = '<p class="muted">No posts yet.</p>'; return; }
+      el.innerHTML = posts.map(function (p) {
+        var tags = (p.tags || []).map(function (t) { return '<span class="chip">' + esc(t) + '</span>'; }).join(" ");
+        return '<article class="pcard reveal">' +
+          '<div class="post-meta">' + esc(prettyDate(p.date)) + (p.readingTime ? ' · ' + esc(p.readingTime) : "") + '</div>' +
+          '<h3><a href="' + esc(p.url) + '">' + esc(p.title) + '</a></h3>' +
+          '<p class="teaser">' + esc(p.excerpt) + '</p>' +
+          '<div class="pcard-links"><a class="details" href="' + esc(p.url) + '">Read ' + I.arrow + '</a></div>' +
+        '</article>';
+      }).join("");
+      if (window.revealNow) window.revealNow(el);
+    },
+
     news: function (id, limit) {
       var el = document.getElementById(id); if (!el) return;
       var items = (SITE.news || []); if (limit) items = items.slice(0, limit);
