@@ -86,12 +86,13 @@
       var order = ["Research", "Master's", "Bachelor's"];
       var groups = {};
       (SITE.projects || []).forEach(function (p) { (groups[p.category] = groups[p.category] || []).push(p); });
-      var html = "";
+      var html = "", first = true;
       order.forEach(function (cat) {
         if (!groups[cat]) return;
-        html += '<div class="section-head reveal" style="margin-top:3.5rem"><div class="kicker">' + esc(cat) + '</div>' +
+        html += '<div class="section-head reveal"' + (first ? '' : ' style="margin-top:3.5rem"') + '><div class="kicker">' + esc(cat) + '</div>' +
           '<h2>' + (cat === "Research" ? "Research" : cat + " project") + '</h2></div>';
         html += '<div class="card-grid">' + groups[cat].map(projectCard).join("") + '</div>';
+        first = false;
       });
       el.innerHTML = html;
       if (window.revealNow) window.revealNow(el);
