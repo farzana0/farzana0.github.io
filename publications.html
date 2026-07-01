@@ -47,7 +47,6 @@
     <section class="section">
       <div class="container">
         <h1 class="sr-only">Publications</h1>
-        <div class="pub-controls reveal" id="pub-filter"></div>
         <div class="pub-list" id="pub-list"></div>
       </div>
     </section>
@@ -67,7 +66,7 @@
   <script src="assets/js/render.js"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
-    Render.publications("pub-list", "pub-filter");
+    Render.publications("pub-list");
   </script>
 </body>
 </html>
