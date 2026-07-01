@@ -50,14 +50,8 @@
           <div>
             <div class="kicker">Curriculum Vitae</div>
             <h1>CV</h1>
-            <p>A concise overview below. <span id="cv-pdf-slot"></span></p>
           </div>
           <a class="btn btn--primary" id="cv-download" href="#" style="display:none">Download PDF</a>
-        </div>
-
-        <div class="todo-note reveal" id="cv-todo">
-          <strong>Placeholder:</strong> a downloadable CV PDF isn’t linked yet.
-          Add <code>assets/cv.pdf</code> and set <code>profile.links.cv</code> in <code>assets/data/site.js</code> — the button above will appear automatically.
         </div>
 
         <div class="split mt-4">
@@ -127,7 +121,6 @@
     if (L.cv) {
       var btn = document.getElementById("cv-download");
       btn.href = L.cv; btn.style.display = "inline-flex";
-      document.getElementById("cv-todo").style.display = "none";
     }
   </script>
 </body>
