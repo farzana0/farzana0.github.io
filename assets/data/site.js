@@ -57,7 +57,7 @@ window.SITE = {
   education: [
     { degree: "PhD, Computer Science", org: "Université de Montréal · Mila", period: "2021 – present", note: "Advisor: Guillaume Rabusseau. Tensor networks, explainability, AI safety." },
     { degree: "MSc, Computer Science", org: "York University, Toronto", period: "2019", note: "Evolving network representation learning (EvoNRL); dynamic graph embeddings." },
-    { degree: "BSc, Electrical Engineering", org: "Sharif University of Technology", period: "", note: "TODO: undergraduate capstone details — pending CV." }
+    { degree: "BSc, Electrical Engineering", org: "Sharif University of Technology", period: "2012 – 2017", note: "" }
   ],
 
   service: [
