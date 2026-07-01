@@ -50,7 +50,7 @@ window.SITE = {
      ---------------------------------------------------------------------- */
   bio: [
     "I am a PhD student at the Université de Montréal and Mila – Quebec AI Institute, advised by Guillaume Rabusseau. My research sits at the intersection of <strong>explainable AI</strong>, <strong>AI safety</strong>, and <strong>mechanistic interpretability</strong>.",
-    "A common thread runs through my work: <strong>multilinear structure</strong>. Many objects we care about — feature attributions, cooperative-game values, learned representations, quantum circuits — have an underlying multilinear structure, and <strong>tensor networks</strong> give a compact, tractable handle on them. I use this to compute Shapley values and higher-order interactions efficiently, to probe and steer language-model representations, and to audit how models behave when they know they are being evaluated.",
+    "A common thread runs through my work: <strong>multilinear structure</strong>. Many objects we care about — feature attributions, cooperative-game values, learned representations, quantum circuits — can be written as multilinear maps, and <strong>tensor networks</strong> give a compact, tractable handle on them. I use this to compute Shapley values and higher-order interactions efficiently, to probe and steer language-model representations, and to audit how models behave when they know they are being evaluated.",
     "Before Mila, I completed a MSc in Computer Science at York University and a BSc in Electrical Engineering at Sharif University of Technology. I co-organize a Tensor Network reading group on tensors, quantum theory, and machine learning."
   ],
 
