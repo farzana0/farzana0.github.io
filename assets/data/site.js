@@ -17,7 +17,7 @@ window.SITE = {
       "Mila – Quebec AI Institute"
     ],
     tagline:
-      "Making the internals of learning systems legible — with tensor networks, Shapley values, and multilinear methods for explainable and safe AI.",
+      "Explainable and safe AI, through tensor networks and multilinear methods.",
     advisor: { name: "Guillaume Rabusseau", url: "https://mila.quebec/en/directory/guillaume-rabusseau" },
     location: "Montréal, Québec, Canada",
     email: "farzaneh.heidari@mila.quebec",
