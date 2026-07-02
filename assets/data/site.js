@@ -69,8 +69,7 @@ window.SITE = {
     { role: "Research Intern", org: "RIKEN AIP", period: "", note: "Tensor-network methods for attribution." },
     { role: "Research Intern", org: "Zapata AI", period: "", note: "Quantum computing." },
     { role: "Research Intern", org: "Samsung Research America", period: "", note: "" },
-    { role: "Researcher", org: "Université du Québec à Montréal (UQAM)", period: "", note: "" },
-    { role: "Graduate Researcher", org: "York University (with Manos Papagelis)", period: "", note: "Network representation learning; spatiotemporal & epidemic networks." }
+    { role: "Research Intern", org: "Helmholtz Institute Aachen", period: "", note: "" }
   ],
 
   service: [
