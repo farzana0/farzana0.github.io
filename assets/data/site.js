@@ -65,7 +65,7 @@ window.SITE = {
      Dates left blank where unconfirmed — fill period: "…" to show a date.
      ---------------------------------------------------------------------- */
   experience: [
-    { role: "Research Intern", org: "LawZero", period: "", note: "AI-safety research nonprofit." },
+    { role: "Research Intern", org: "LawZero", period: "", note: "Evaluation awareness." },
     { role: "Research Intern", org: "RIKEN AIP", period: "", note: "Tensor-network methods for attribution." },
     { role: "Research Intern", org: "Zapata AI", period: "", note: "Quantum computing." },
     { role: "Research Intern", org: "Samsung Research America", period: "", note: "" },
