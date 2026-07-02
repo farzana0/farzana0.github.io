@@ -104,6 +104,17 @@
       '<rect x="152" y="60" width="26" height="44"/><rect x="182" y="48" width="26" height="56"/><rect x="212" y="40" width="26" height="64"/></g>' +
       '<path d="M92 88 H118 V74 H148 V60 H178 V48 H208 V40 H238" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>')
   };
+  // CP-MLP: rank-1 atom (detector + value -> multiply -> output)
+  THUMBS.cp = SVG(
+    '<defs><marker id="ah-cp" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L7 4 L0 8 z" fill="var(--accent)"/></marker></defs>' +
+    '<circle cx="56" cy="66" r="6" fill="var(--accent)"/>' +
+    '<g stroke="var(--accent)" stroke-width="2" fill="none"><line x1="62" y1="62" x2="118" y2="46"/><line x1="62" y1="70" x2="118" y2="86"/></g>' +
+    '<rect x="118" y="38" width="22" height="16" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.8"/>' +
+    '<rect x="118" y="78" width="22" height="16" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.8"/>' +
+    '<g stroke="var(--accent)" stroke-width="2" fill="none"><line x1="140" y1="46" x2="180" y2="60"/><line x1="140" y1="86" x2="180" y2="72"/></g>' +
+    '<circle cx="192" cy="66" r="12" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="185" y1="66" x2="199" y2="66" stroke="var(--accent)" stroke-width="2"/><line x1="192" y1="59" x2="192" y2="73" stroke="var(--accent)" stroke-width="2"/>' +
+    '<line x1="204" y1="66" x2="248" y2="66" stroke="var(--accent)" stroke-width="2" marker-end="url(#ah-cp)"/>' +
+    '<rect x="250" y="56" width="20" height="20" rx="3" fill="var(--accent)"/>');
   THUMBS._default = THUMBS.tree;
   window.THUMBS = THUMBS;
 
@@ -277,6 +288,30 @@
     s += '<text x="540" y="210" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">closed-form Vandermonde</text>';
     return '<svg viewBox="0 0 660 244" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="diagram-svg" font-family="Inter, sans-serif" role="img">' + AR + s + '</svg>';
   })();
+
+  /* CP-MLP: a single channel — detector u & value v, gate g, written out through w (rank-1 atom w⊗u⊗v) */
+  DIAGRAMS["d-cpmlp"] = '<svg viewBox="0 0 640 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="diagram-svg" font-family="Inter, sans-serif" role="img">' + AR +
+    '<rect x="30" y="98" width="40" height="26" rx="6" fill="var(--surface)" stroke="var(--border-strong)"/><text x="50" y="115" text-anchor="middle" font-size="14" fill="var(--text)">x</text>' +
+    '<text x="156" y="52" text-anchor="middle" font-size="11.5" fill="var(--text-faint)">detector</text>' +
+    '<rect x="130" y="60" width="52" height="26" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.8"/><text x="156" y="78" text-anchor="middle" font-size="13" fill="var(--accent)">uₐ</text>' +
+    '<rect x="130" y="136" width="52" height="26" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.8"/><text x="156" y="154" text-anchor="middle" font-size="13" fill="var(--accent)">vₐ</text>' +
+    '<text x="156" y="180" text-anchor="middle" font-size="11.5" fill="var(--text-faint)">value</text>' +
+    '<line x1="70" y1="106" x2="127" y2="76" stroke="var(--text-faint)" stroke-width="1.8" marker-end="url(#dgar)"/>' +
+    '<line x1="70" y1="116" x2="127" y2="146" stroke="var(--text-faint)" stroke-width="1.8" marker-end="url(#dgar)"/>' +
+    '<text x="300" y="30" text-anchor="middle" font-size="11.5" fill="var(--text-faint)">gate</text>' +
+    '<circle cx="300" cy="54" r="16" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/><text x="300" y="59" text-anchor="middle" font-size="13" fill="var(--accent)">g</text>' +
+    '<circle cx="330" cy="111" r="15" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/><line x1="322" y1="111" x2="338" y2="111" stroke="var(--accent)" stroke-width="2"/><line x1="330" y1="103" x2="330" y2="119" stroke="var(--accent)" stroke-width="2"/>' +
+    '<line x1="182" y1="73" x2="240" y2="73" stroke="var(--accent)" stroke-width="1.8"/><text x="211" y="66" text-anchor="middle" font-size="11" fill="var(--text-soft)">αₐ</text>' +
+    '<line x1="240" y1="73" x2="283" y2="61" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#dgar)"/>' +
+    '<line x1="240" y1="73" x2="317" y2="104" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#dgar)"/>' +
+    '<line x1="182" y1="149" x2="319" y2="120" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#dgar)"/><text x="250" y="151" text-anchor="middle" font-size="11" fill="var(--text-soft)">βₐ</text>' +
+    '<line x1="300" y1="70" x2="325" y2="97" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#dgar)"/>' +
+    '<line class="dg-flow" x1="345" y1="111" x2="432" y2="111" stroke="var(--accent)" stroke-width="2.2" marker-end="url(#dgar)"/><text x="388" y="103" text-anchor="middle" font-size="11" fill="var(--text-soft)">hₐ</text>' +
+    '<text x="460" y="88" text-anchor="middle" font-size="11.5" fill="var(--text-faint)">output</text>' +
+    '<rect x="434" y="96" width="54" height="30" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.8"/><text x="461" y="115" text-anchor="middle" font-size="13" fill="var(--accent)">Wₒₐ</text>' +
+    '<line x1="488" y1="111" x2="548" y2="111" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#dgar)"/><text x="566" y="116" text-anchor="middle" font-size="14" fill="var(--text)">yₒ</text>' +
+    '<text x="320" y="206" text-anchor="middle" font-size="12.5" fill="var(--text-soft)">rank-1 atom  w ⊗ u ⊗ v      ·      tied: u = v      ·      untied: u ≠ v</text>' +
+    '</svg>';
 
   window.DIAGRAMS = DIAGRAMS;
 
@@ -492,7 +527,7 @@
           '<p class="subtitle">' + esc(p.subtitle) + '</p>' +
           authorsLine +
           '<div class="detail-meta">' + badge(p.status) + venueMeta + '</div>' +
-          '<div class="detail-links">' + (Object.keys(p.links || {}).length ? linkPills(p.links, "btn btn--sm") : '<span class="muted">Links pending.</span>') + '</div>' +
+          '<div class="detail-links">' + (Object.keys(p.links || {}).length ? linkPills(p.links, "btn btn--sm") : "") + '</div>' +
         '</div></header>' +
         '<div class="container section detail-body"><div class="prose">' +
           brief + diagram +

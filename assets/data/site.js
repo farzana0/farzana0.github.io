@@ -252,6 +252,45 @@ window.SITE = {
     },
 
     {
+      id: "cp-mlp",
+      thumb: "cp",
+      nutshell:
+        "Transformer feed-forward blocks — bilinear, ReLU², SiLU², ReGLU, SwiGLU — are usually explained one activation at a time. CP-MLPs show they are all rank-1 tensor 'atoms' with three roles (detect a feature, read its value, write the output), and pin down exactly when untying the detector and value directions buys you width.",
+      diagram: "d-cpmlp",
+      title: "CP-MLPs",
+      subtitle: "A tensor-rank theory of tied and untied MLP blocks",
+      category: "Research",
+      featured: true,
+      accent: "sky",
+      year: 2026,
+      status: { label: "Under review", kind: "review" },
+      tags: ["Tensor Decomposition", "Transformers", "Expressivity"],
+      authors: "Md Rifat Arefin, Farzaneh Heidari, Irina Rish, Guillaume Rabusseau",
+      venue: "Under review",
+      teaser:
+        "One tensor framework (canonical polyadic factorization) that unifies bilinear, ReLU², ReGLU and SwiGLU feed-forward blocks — with exact width separations between tied and untied detector–value units.",
+      overview:
+        "Transformer feed-forward (MLP) blocks mix several design choices — squared activations (ReLU², SiLU²), gating (ReGLU, SwiGLU), and <em>tied vs untied</em> parameter sharing — usually explained one activation at a time. CP-MLPs put them in a single tensor framework based on <strong>canonical polyadic (CP) factorization</strong>: each multiplicative unit is a rank-1 <em>atom</em> with three roles — a <strong>detector</strong> that selects an input feature, a <strong>value</strong> that supplies the signal, and an <strong>output</strong> direction that writes the result. <em>Tied</em> blocks (ReLU², SiLU²) force the detector and value to share one direction; <em>untied</em> blocks (bilinear, ReGLU, SwiGLU) let them differ — and that single distinction turns out to control expressivity.",
+      motivation:
+        "Feed-forward layers are roughly two-thirds of a transformer's parameters, and swapping between these blocks measurably changes training — yet there was no common theory for <em>when</em> squaring, gating, or branch-tying actually change what a block can represent. Separating the choice of gate from the choice of whether detector and value are shared makes that question precise and answerable.",
+      methods: [
+        "Write bilinear, ReLU², SiLU², ReGLU and SwiGLU blocks in one CP form: each channel is a rank-1 atom (detector ⊗ value ⊗ output).",
+        "Compare blocks after <em>input symmetrization</em> — only the input-symmetric part of a channel's coefficient tensor affects the function it computes — so tied and untied atoms live in a common space.",
+        "Prove exact, degree-wise width (tensor-rank) separations between tied and untied atoms; for smooth gates like SwiGLU the results apply Taylor-degree by Taylor-degree."
+      ],
+      results: [
+        "Untied detector–value atoms are strictly more width-efficient for indefinite quadratic interactions and role-asymmetric monomials — e.g. the degree-k monomial x₁ᵏ⁻¹x₂ needs one untied atom but k tied atoms (a Waring-rank bound).",
+        "Tied atoms are structurally matched to symmetric pure-power targets, so tying is neither universally better nor worse — the efficient parameterization depends on the target's structure.",
+        "Empirically, below the required width models hit an <em>irreducible approximation floor</em> (extra optimization does not close the gap); the best architecture flips with target structure, and the untied advantage persists in trained gated MLPs at matched parameter count."
+      ],
+      figures: [],
+      poster: null,
+      links: {},
+      futureWork:
+        "Extending the atom-rank analysis to deeper stacks and attention, and using it to guide feed-forward block design at scale."
+    },
+
+    {
       id: "multilinear-steering",
       thumb: "steer",
       nutshell:
@@ -534,6 +573,15 @@ window.SITE = {
       status: { label: "In progress", kind: "progress" },
       projectId: "evaluation-awareness",
       links: { code: "https://github.com/farzana0/Evaluation-Awareness-demo" }
+    },
+    {
+      title: "CP-MLPs: A Tensor-Rank Theory of Tied and Untied MLP Blocks",
+      authors: "Md Rifat Arefin, Farzaneh Heidari, Irina Rish, Guillaume Rabusseau",
+      venue: "Under review",
+      year: 2026,
+      status: { label: "Under review", kind: "review" },
+      projectId: "cp-mlp",
+      links: {}
     },
     {
       title: "Auditing Evaluation-Conditioned Behaviour in Tool-Using Chess Agents",
