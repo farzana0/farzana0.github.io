@@ -158,7 +158,7 @@ window.SITE = {
       thumb: "graph",
       nutshell:
         "For graph inputs, TN-SHAP builds a tensor network shaped like the graph itself. That lets it report which nodes and which edges mattered — deterministically, with no Monte-Carlo sampling.",
-      diagram: "d-shapley-graph",
+      diagram: "d-jewel-g",
       title: "TN-SHAP-G",
       subtitle: "Graph-Structured Tensor Network Surrogates for Shapley Values and Interactions",
       category: "Research",
@@ -172,21 +172,26 @@ window.SITE = {
       teaser:
         "Deterministic Shapley values and interactions for graphs, via a tensor-network surrogate whose topology mirrors the input graph.",
       overview:
-        "TN-SHAP-G learns a compact, <em>graph-aligned</em> multilinear surrogate that approximates the masked-input behavior of a graph model. Because the tensor network's structure mirrors the graph, Shapley values are computed <strong>deterministically</strong> — no Monte-Carlo sampling — as a diagonal derivative integral evaluated by polynomial interpolation, and order-2 interaction indices come from the same machinery on edges.",
+        "Explaining a graph model means saying which <em>nodes</em> — and which <em>pairs of nodes</em> — drove a prediction. Computing that exactly is an O(2ⁿ) problem over all node coalitions, and sampling estimators are noisy, worst of all for interactions. TN-SHAP-G avoids both by learning a compact <strong>graph-aligned surrogate</strong>: a tensor network whose wiring mirrors the input graph, with one tensor core per node and a shared factor — a <em>bond</em> — on every edge. Trained from a small number of masked-model queries, this surrogate <em>is</em> the multilinear extension of the masked-graph game, so every first- and higher-order Shapley index can be read off it deterministically and in closed form — with no extra model calls and no Monte-Carlo variance.",
       motivation:
-        "Explaining GNNs means attributing predictions to nodes and their interactions, but coalition masking over a graph is combinatorial and sampling estimators are high-variance. Respecting graph topology in the surrogate makes the attribution both cheaper and structurally faithful.",
+        "Shapley values are the principled way to attribute a graph prediction to its nodes, but exact computation scales as 2ⁿ, and model-agnostic samplers (SHAP-IQ, GraphSVX) need thousands of forward passes whose variance blows up for higher-order interactions. The coalition-value table is not unstructured, though: graph predictors have local, low-rank dependency patterns. Matching the surrogate's topology to the graph turns that structure into an inductive bias — bond dimensions act like cut-ranks across graph separators — making attribution both cheaper and structurally faithful.",
       methods: [
-        "Build a masked graph game v(S) = f(G, X_S) with a fixed baseline for excluded nodes.",
-        "Fit a graph-aligned tensor network: one core per node, physical dim 2 (in/out of coalition), bond dim χ per incident edge.",
-        "Compute node Shapley values via the diagonal derivative integral φ_u = ∫₀¹ ∂ν̂/∂z_u(t·1) dt, evaluated exactly at Chebyshev nodes (Vandermonde interpolation).",
-        "Extend to O2 (pairwise) Shapley interaction indices on graph edges."
+        "Masked graph game: ν(S) = f(G, X_S) keeps the features of the nodes in S and replaces the rest with a baseline.",
+        "Graph-aligned tensor network: one core per node and a bond of dimension χ on each edge; a cut-rank ↔ bond-dimension theorem ties surrogate capacity to the graph's separators.",
+        "Fit the surrogate from a small number of oracle queries — near-linear in n for bounded-degree graphs — using surrogate test R² as a principled proxy for attribution accuracy.",
+        "Read node Shapley values and edge interaction indices off the surrogate in closed form via Vandermonde interpolation of its diagonal; one trained surrogate amortizes every order."
       ],
       results: [
-        "Matches exact Shapley enumeration on small graphs (O1 cosine similarity > 0.98; O2 > 0.95 on the toy benchmark).",
-        "Scales to graphs where sampling-based attribution becomes impractical.",
-        "Demonstrated on molecular benchmarks (e.g. mutagenicity)."
+        "&gt;0.99 cosine similarity to exact Shapley values with as few as 50 model evaluations — 10–100× fewer than SHAP-IQ and GraphSVX.",
+        "Fully deterministic: no Monte-Carlo variance, with error guarantees linking surrogate approximation error to Shapley error.",
+        "Scales to graphs where exact enumeration and sampling become impractical; validated on molecular benchmarks (mutagenicity, proteins)."
       ],
-      figures: [],
+      figures: [
+        { src: "assets/img/projects/tnshapg_molecule.png", caption: "A predicted-mutagenic molecule with every atom coloured by its Shapley attribution (red pushes toward the prediction, blue pushes away)." },
+        { src: "assets/img/projects/tnshapg_shapley_bars.png", caption: "Per-atom Shapley values for the same molecule: carbons and the phosphorus pull the prediction down, the hydrogens push it up." },
+        { src: "assets/img/projects/tnshapg_interactions.png", caption: "Pairwise Shapley interaction indices between atoms — the oxygen atoms show the strongest positive interactions." },
+        { src: "assets/img/projects/tnshapg_mutagenicity.png", caption: "On mutagenicity, TN-SHAP-G reaches >0.99 cosine similarity to exact Shapley with ~50 model queries, where SHAP-IQ is still far off." }
+      ],
       poster: "assets/posters/tn-shap-g-icml2026-poster.pdf",
       links: {
         arxiv: "https://arxiv.org/abs/2606.01540",
@@ -230,9 +235,10 @@ window.SITE = {
         "Finite-shot estimates unbiased in expectation with variance ∝ 1/shots."
       ],
       figures: [
-        { src: "assets/img/tnshapq_feature.png", caption: "Feature-attribution error vs. quadrature points — exact once M ≥ ⌈d/2⌉." },
-        { src: "assets/img/projects/tnshapq_feature_int.png", caption: "Order-2 feature interaction indices, recovered exactly at the interaction-order threshold." },
-        { src: "assets/img/tnshapq_cost.png", caption: "Query cost vs. dimension: 2PM evaluations vs. 2ᴾ enumeration." },
+        { src: "assets/img/projects/tnshapq_pipeline.png", caption: "The TN-SHAP-Q pipeline: recover the exact multilinear tensor from the QNN, then aggregate to Shapley values and interactions in closed form — matching exact 2ᴾ enumeration to machine precision (~1e-16)." },
+        { src: "assets/img/projects/tnshapq_exact_vs_direct.png", caption: "Feature Shapley values: the direct Owen-integral route matches exact coalition enumeration." },
+        { src: "assets/img/projects/tnshapq_o2_heatmap.png", caption: "Order-2 feature interaction indices, recovered from the same multilinear extension." },
+        { src: "assets/img/tnshapq_cost.png", caption: "Query cost vs. dimension: 2PM circuit evaluations vs. 2ᴾ coalition enumeration." },
         { src: "assets/img/tnshapq_shots.png", caption: "Shot-noise robustness of feature and gate attributions (∝ 1/√N)." }
       ],
       poster: null,

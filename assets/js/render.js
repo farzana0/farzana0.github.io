@@ -234,6 +234,50 @@
       lbl(325, 'pay-as-bid: each accepted bid paid its own price')
     )
   };
+
+  /* TN-SHAP-G "jewel": masked graph game -> graph-aligned tensor network -> deterministic Shapley */
+  DIAGRAMS["d-jewel-g"] = (function () {
+    var cy = 132, r = 40;
+    function pts(cx) { return [[cx, cy - r], [cx + 38, cy - 12], [cx + 24, cy + 32], [cx - 24, cy + 32], [cx - 38, cy - 12]]; }
+    function edges(P) {
+      var e = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [1, 4]];
+      return e.map(function (x) { return 'M' + P[x[0]][0] + ' ' + P[x[0]][1] + ' L' + P[x[1]][0] + ' ' + P[x[1]][1]; }).join(' ');
+    }
+    function panel(x, label) {
+      return '<rect x="' + x + '" y="20" width="196" height="212" rx="14" fill="var(--surface)" stroke="var(--border)"/>' +
+        '<text x="' + (x + 16) + '" y="42" font-size="11.5" font-weight="700" letter-spacing="0.04em" fill="var(--accent)">' + label + '</text>';
+    }
+    function fl(x1, x2) { return '<line class="dg-flow" x1="' + x1 + '" y1="' + cy + '" x2="' + x2 + '" y2="' + cy + '" stroke="var(--accent)" stroke-width="2.4" marker-end="url(#dgar)"/>'; }
+    var A = pts(106), B = pts(330), cxB = 330;
+    var s = panel(8, 'A · MASKED GRAPH GAME') + panel(232, 'B · GRAPH-ALIGNED TN') + panel(456, 'C · SHAPLEY + INTERACTIONS');
+    // (A) masked graph
+    s += '<path d="' + edges(A) + '" fill="none" stroke="var(--accent)" stroke-width="2" opacity="0.5"/>';
+    [1, 1, 0, 1, 0].forEach(function (on, i) {
+      s += on ? '<circle cx="' + A[i][0] + '" cy="' + A[i][1] + '" r="7" fill="var(--accent)"/>'
+              : '<circle cx="' + A[i][0] + '" cy="' + A[i][1] + '" r="7" fill="var(--bg)" stroke="var(--accent)" stroke-width="2" stroke-dasharray="3 2.5"/>';
+    });
+    s += '<text x="106" y="210" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">ν(S) = f(G, features of S kept)</text>' + fl(204, 232);
+    // (B) tensor cores + bonds + physical legs
+    s += '<path d="' + edges(B) + '" fill="none" stroke="var(--accent)" stroke-width="2.4"/>';
+    B.forEach(function (p) {
+      var dx = p[0] - cxB, dy = p[1] - cy, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+      s += '<line x1="' + (p[0] + ux * 21).toFixed(1) + '" y1="' + (p[1] + uy * 21).toFixed(1) + '" x2="' + (p[0] + ux * 10).toFixed(1) + '" y2="' + (p[1] + uy * 10).toFixed(1) + '" stroke="var(--text-faint)" stroke-width="1.6" marker-end="url(#dgar)"/>';
+      s += '<rect x="' + (p[0] - 8) + '" y="' + (p[1] - 8) + '" width="16" height="16" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.9"/>';
+    });
+    s += '<text x="330" y="210" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">one core / node · bond χ / edge</text>' + fl(428, 456);
+    // (C) Shapley bars
+    var base = 158, bx = [488, 514, 540, 566, 592], hs = [34, -22, 42, -15, 28];
+    s += '<line x1="480" y1="' + base + '" x2="602" y2="' + base + '" stroke="var(--border-strong)" stroke-width="1.5"/>';
+    bx.forEach(function (x, i) {
+      var h = hs[i];
+      s += h >= 0 ? '<rect x="' + x + '" y="' + (base - h) + '" width="15" height="' + h + '" rx="2" fill="var(--accent)"/>'
+                  : '<rect x="' + x + '" y="' + base + '" width="15" height="' + (-h) + '" rx="2" fill="var(--accent)" opacity="0.5"/>';
+    });
+    s += '<text x="540" y="88" text-anchor="middle" font-size="13" fill="var(--text-soft)">φ_v  &amp;  I_uv</text>';
+    s += '<text x="540" y="210" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">closed-form Vandermonde</text>';
+    return '<svg viewBox="0 0 660 244" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="diagram-svg" font-family="Inter, sans-serif" role="img">' + AR + s + '</svg>';
+  })();
+
   window.DIAGRAMS = DIAGRAMS;
 
   /* link metadata: type -> {label, icon} */
