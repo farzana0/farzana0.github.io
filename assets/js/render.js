@@ -481,9 +481,8 @@
         ? '<figure class="diagram-fig reveal">' + DIAGRAMS[p.diagram] + '<figcaption>How it works</figcaption></figure>'
         : "";
 
-      var meta = [];
-      if (p.authors) meta.push(esc(p.authors));
-      if (p.venue) meta.push("<em>" + esc(p.venue) + "</em>");
+      var authorsLine = p.authors ? '<p class="detail-authors">' + boldMe(p.authors) + '</p>' : "";
+      var venueMeta = p.venue ? '<span class="detail-venue"><em>' + esc(p.venue) + '</em></span>' : "";
 
       host.innerHTML =
         '<header class="detail-hero"><div class="container">' +
@@ -491,16 +490,17 @@
           '<div class="detail-cat">' + esc(p.category) + '</div>' +
           '<h1>' + esc(p.title) + '</h1>' +
           '<p class="subtitle">' + esc(p.subtitle) + '</p>' +
-          '<div class="detail-meta">' + badge(p.status) + (meta.length ? '<span>' + boldMe(meta.join(" · ")) + '</span>' : "") + '</div>' +
+          authorsLine +
+          '<div class="detail-meta">' + badge(p.status) + venueMeta + '</div>' +
           '<div class="detail-links">' + (Object.keys(p.links || {}).length ? linkPills(p.links, "btn btn--sm") : '<span class="muted">Links pending.</span>') + '</div>' +
         '</div></header>' +
         '<div class="container section detail-body"><div class="prose">' +
           brief + diagram +
           section("Overview", p.overview ? "<p>" + p.overview + "</p>" : "") +
+          section("Figures", figures) +
           section("Motivation", p.motivation ? "<p>" + p.motivation + "</p>" : "") +
           section("Methods", list(p.methods)) +
           section("Results", (p.results && p.results.length) ? list(p.results) : "") +
-          section("Figures", figures) +
           section("Poster", poster) +
           section("Future work", p.futureWork ? "<p>" + p.futureWork + "</p>" : "") +
           '<div class="mt-4"><a class="btn btn--ghost" href="projects.html">' + I.arrow + ' All projects</a></div>' +

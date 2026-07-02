@@ -269,7 +269,10 @@ p { margin: 0 0 1.1rem; }
 .detail-hero h1 { font-size: clamp(2rem, 4.5vw, 2.9rem); margin: 0.8rem 0 0.8rem; }
 .detail-hero .subtitle { font-size: 1.15rem; color: var(--text-soft); max-width: 52ch; margin: 0; }
 .detail-cat { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
-.detail-meta { display: flex; flex-wrap: wrap; gap: 0.7rem 1.1rem; align-items: center; color: var(--text-soft); font-size: 0.94rem; margin-top: 1.3rem; }
+.detail-authors { color: var(--text); font-size: 1.05rem; margin: 1rem 0 0; }
+.detail-authors strong { font-weight: 600; }
+.detail-meta { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; color: var(--text-soft); font-size: 0.92rem; margin-top: 0.8rem; }
+.detail-venue em { font-style: italic; }
 .detail-links { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.6rem; }
 .detail-body h2 { font-size: 1.35rem; }
 .figure-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 0.5rem 0 1.1rem; }

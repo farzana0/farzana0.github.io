@@ -147,6 +147,7 @@ window.SITE = {
       poster: "assets/posters/tn-shap-aistats2026-poster.pdf",
       links: {
         arxiv: "https://arxiv.org/abs/2510.22138",
+        openreview: "https://openreview.net/profile?id=~Farzaneh_Heidari2",
         code: "https://github.com/farzana0/TN-SHAP"
       },
       futureWork:
@@ -195,6 +196,7 @@ window.SITE = {
       poster: "assets/posters/tn-shap-g-icml2026-poster.pdf",
       links: {
         arxiv: "https://arxiv.org/abs/2606.01540",
+        openreview: "https://openreview.net/profile?id=~Farzaneh_Heidari2",
         code: "https://github.com/farzana0/TN-SHAP-G"
       },
       futureWork:
