@@ -28,7 +28,7 @@ window.SITE = {
       dblp: "https://dblp.org/pid/231/1013.html",
       linkedin: "https://www.linkedin.com/in/farzaneh-heidari-32919653/",
       mila: "https://mila.quebec/en/person/farzaneh-heidari/",
-      cv: null
+      cv: "assets/cv.pdf"
     }
   },
 
@@ -110,6 +110,7 @@ window.SITE = {
   projects: [
     {
       id: "tn-shap",
+      thumb: "tree",
       title: "TN-SHAP",
       subtitle: "Tractable Shapley Values and Interactions via Tensor Networks",
       category: "Research",
@@ -137,7 +138,7 @@ window.SITE = {
         "Scales to high-dimensional problems (d ≈ 30–60) where enumeration is infeasible."
       ],
       figures: [],
-      poster: null,
+      poster: "assets/posters/tn-shap-aistats2026-poster.pdf",
       links: {
         arxiv: "https://arxiv.org/abs/2510.22138",
         code: "https://github.com/farzana0/TN-SHAP"
@@ -148,6 +149,7 @@ window.SITE = {
 
     {
       id: "tn-shap-g",
+      thumb: "graph",
       title: "TN-SHAP-G",
       subtitle: "Graph-Structured Tensor Network Surrogates for Shapley Values and Interactions",
       category: "Research",
@@ -176,7 +178,7 @@ window.SITE = {
         "Demonstrated on molecular benchmarks (e.g. mutagenicity)."
       ],
       figures: [],
-      poster: null,
+      poster: "assets/posters/tn-shap-g-icml2026-poster.pdf",
       links: {
         arxiv: "https://arxiv.org/abs/2606.01540",
         code: "https://github.com/farzana0/TN-SHAP-G"
@@ -187,6 +189,7 @@ window.SITE = {
 
     {
       id: "tn-shap-q",
+      thumb: "circuit",
       title: "TN-SHAP-Q",
       subtitle: "Exact Multilinear Extensions of Quantum Neural Networks for Shapley Attribution",
       category: "Research",
@@ -229,6 +232,7 @@ window.SITE = {
 
     {
       id: "multilinear-steering",
+      thumb: "steer",
       title: "Multilinear Steering",
       subtitle: "Bilinear & low-rank interaction probes and steering for safety-relevant concepts",
       category: "Research",
@@ -266,6 +270,7 @@ window.SITE = {
 
     {
       id: "evaluation-awareness",
+      thumb: "eye",
       title: "Evaluation Awareness",
       subtitle: "How do LLMs encode evaluation-awareness?",
       category: "Research",
@@ -305,6 +310,7 @@ window.SITE = {
 
     {
       id: "evaluation-adaptation",
+      thumb: "toggle",
       title: "Evaluation Adaptation",
       subtitle: "Steering & fine-tuning models to act as if deployed",
       category: "Research",
@@ -341,6 +347,7 @@ window.SITE = {
 
     {
       id: "chess-strategic-adaptation",
+      thumb: "chess",
       title: "Chess Strategic Adaptation",
       subtitle: "Auditing evaluation-conditioned behaviour in tool-using chess agents",
       category: "Research",
@@ -380,6 +387,7 @@ window.SITE = {
 
     {
       id: "evonrl",
+      thumb: "network",
       title: "EvoNRL",
       subtitle: "Evolving Network Representation Learning Based on Random Walks",
       category: "Master's",
@@ -417,6 +425,7 @@ window.SITE = {
 
     {
       id: "bachelors-project",
+      thumb: "market",
       title: "Study and Analysis of Wholesale Electricity Markets",
       subtitle: "BSc thesis · Electrical Engineering, Sharif University of Technology",
       category: "Bachelor's",
@@ -458,7 +467,7 @@ window.SITE = {
       year: 2026,
       status: { label: "Accepted", kind: "accepted" },
       projectId: "tn-shap-g",
-      links: { arxiv: "https://arxiv.org/abs/2606.01540", code: "https://github.com/farzana0/TN-SHAP-G" }
+      links: { arxiv: "https://arxiv.org/abs/2606.01540", code: "https://github.com/farzana0/TN-SHAP-G", poster: "assets/posters/tn-shap-g-icml2026-poster.pdf" }
     },
     {
       title: "Tractable Shapley Values and Interactions via Tensor Networks",
@@ -467,7 +476,7 @@ window.SITE = {
       year: 2026,
       status: { label: "Accepted", kind: "accepted" },
       projectId: "tn-shap",
-      links: { arxiv: "https://arxiv.org/abs/2510.22138", pdf: "https://arxiv.org/pdf/2510.22138", code: "https://github.com/farzana0/TN-SHAP" }
+      links: { arxiv: "https://arxiv.org/abs/2510.22138", pdf: "https://arxiv.org/pdf/2510.22138", code: "https://github.com/farzana0/TN-SHAP", poster: "assets/posters/tn-shap-aistats2026-poster.pdf" }
     },
     {
       title: "Exact Multilinear Extensions of Quantum Neural Networks for Shapley Attribution of Features and Gates",
