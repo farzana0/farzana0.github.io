@@ -57,6 +57,10 @@
               <ul class="info-list" id="cv-education"></ul>
             </div>
             <div class="info-card">
+              <h3>Experience</h3>
+              <ul class="info-list" id="cv-experience"></ul>
+            </div>
+            <div class="info-card">
               <h3>Selected publications</h3>
               <ul class="info-list" id="cv-pubs"></ul>
               <a class="btn btn--sm mt-2" href="publications.html">Full publication list →</a>
@@ -100,6 +104,10 @@
     // education
     document.getElementById("cv-education").innerHTML = S.education.map(function (e) {
       return '<li><span class="period">' + (e.period || "") + '</span><span class="primary">' + e.degree + '</span><br><span class="secondary">' + e.org + (e.note ? ' — ' + e.note : "") + '</span></li>';
+    }).join("");
+    // experience (internships & research)
+    document.getElementById("cv-experience").innerHTML = (S.experience || []).map(function (e) {
+      return '<li><span class="period">' + (e.period || "") + '</span><span class="primary">' + e.role + '</span><br><span class="secondary">' + e.org + (e.note ? ' — ' + e.note : "") + '</span></li>';
     }).join("");
     // selected pubs (accepted + published)
     var pubs = S.publications.filter(function (p) { return p.status && (p.status.kind === "accepted" || p.status.kind === "published"); });

@@ -60,6 +60,19 @@ window.SITE = {
     { degree: "BSc, Electrical Engineering", org: "Sharif University of Technology", period: "2012 – 2017", note: "Thesis: Study and Analysis of Wholesale Electricity Markets." }
   ],
 
+  /* ----------------------------------------------------------------------
+     Internships & research experience (newest first).
+     Dates left blank where unconfirmed — fill period: "…" to show a date.
+     ---------------------------------------------------------------------- */
+  experience: [
+    { role: "Research Intern", org: "LawZero", period: "Current", note: "AI-safety research nonprofit." },
+    { role: "Research Intern", org: "RIKEN AIP", period: "", note: "Tensor-network methods for attribution." },
+    { role: "Research Intern", org: "Zapata AI", period: "", note: "Quantum computing." },
+    { role: "Research Intern", org: "Samsung Research America", period: "", note: "" },
+    { role: "Researcher", org: "Université du Québec à Montréal (UQAM)", period: "", note: "" },
+    { role: "Graduate Researcher", org: "York University (with Manos Papagelis)", period: "", note: "Network representation learning; spatiotemporal & epidemic networks." }
+  ],
+
   service: [
     "Co-organizer, Tensor Network reading group (tensors, quantum theory & ML).",
     "Reviewer for machine-learning venues."
