@@ -111,6 +111,9 @@ window.SITE = {
     {
       id: "tn-shap",
       thumb: "tree",
+      nutshell:
+        "Shapley values normally force you to re-run a model on all 2ⁿ subsets of its features. TN-SHAP fits a small tensor-network stand-in for the model, then reads the exact importances and pairwise interactions straight off it with a few cheap tensor multiplications — 25–1000× faster than KernelSHAP-IQ.",
+      diagram: "d-shapley-tn",
       title: "TN-SHAP",
       subtitle: "Tractable Shapley Values and Interactions via Tensor Networks",
       category: "Research",
@@ -137,7 +140,10 @@ window.SITE = {
         "25–1000× wall-clock speedup over KernelSHAP-IQ on UCI benchmarks (Diabetes, Concrete, Energy, California Housing).",
         "Scales to high-dimensional problems (d ≈ 30–60) where enumeration is infeasible."
       ],
-      figures: [],
+      figures: [
+        { src: "assets/img/projects/tnshap_training_dynamics.png", caption: "As the surrogate trains, it recovers the order-1, order-2 and order-3 Shapley interaction indices (SII R²) — not just the prediction (Train R²)." },
+        { src: "assets/img/projects/tnshap_rank_order_r2.png", caption: "Surrogate fidelity (safe-R²) improves with tensor-network rank across interaction orders k." }
+      ],
       poster: "assets/posters/tn-shap-aistats2026-poster.pdf",
       links: {
         arxiv: "https://arxiv.org/abs/2510.22138",
@@ -150,6 +156,9 @@ window.SITE = {
     {
       id: "tn-shap-g",
       thumb: "graph",
+      nutshell:
+        "For graph inputs, TN-SHAP builds a tensor network shaped like the graph itself. That lets it report which nodes and which edges mattered — deterministically, with no Monte-Carlo sampling.",
+      diagram: "d-shapley-graph",
       title: "TN-SHAP-G",
       subtitle: "Graph-Structured Tensor Network Surrogates for Shapley Values and Interactions",
       category: "Research",
@@ -190,6 +199,9 @@ window.SITE = {
     {
       id: "tn-shap-q",
       thumb: "circuit",
+      nutshell:
+        "A single-rotation quantum circuit is secretly an exact multilinear function of its inputs. TN-SHAP-Q exploits that to compute feature and gate importances exactly, from a handful of circuit runs instead of exponentially many.",
+      diagram: "d-shapley-q",
       title: "TN-SHAP-Q",
       subtitle: "Exact Multilinear Extensions of Quantum Neural Networks for Shapley Attribution",
       category: "Research",
@@ -219,6 +231,7 @@ window.SITE = {
       ],
       figures: [
         { src: "assets/img/tnshapq_feature.png", caption: "Feature-attribution error vs. quadrature points — exact once M ≥ ⌈d/2⌉." },
+        { src: "assets/img/projects/tnshapq_feature_int.png", caption: "Order-2 feature interaction indices, recovered exactly at the interaction-order threshold." },
         { src: "assets/img/tnshapq_cost.png", caption: "Query cost vs. dimension: 2PM evaluations vs. 2ᴾ enumeration." },
         { src: "assets/img/tnshapq_shots.png", caption: "Shot-noise robustness of feature and gate attributions (∝ 1/√N)." }
       ],
@@ -233,6 +246,9 @@ window.SITE = {
     {
       id: "multilinear-steering",
       thumb: "steer",
+      nutshell:
+        "A linear probe reads a concept along one direction. We add low-rank quadratic terms so the probe — and the steering vector built from it — can capture concepts that live in the interaction between two directions, not just one.",
+      diagram: "d-steer",
       title: "Multilinear Steering",
       subtitle: "Bilinear & low-rank interaction probes and steering for safety-relevant concepts",
       category: "Research",
@@ -271,6 +287,9 @@ window.SITE = {
     {
       id: "evaluation-awareness",
       thumb: "eye",
+      nutshell:
+        "Do language models act differently when they suspect they are being tested? We check three things: behaviour under eval-vs-deploy framings, whether a probe can read evaluation from the activations, and whether nudging that direction actually changes behaviour.",
+      diagram: "d-eye",
       title: "Evaluation Awareness",
       subtitle: "How do LLMs encode evaluation-awareness?",
       category: "Research",
@@ -311,6 +330,9 @@ window.SITE = {
     {
       id: "evaluation-adaptation",
       thumb: "toggle",
+      nutshell:
+        "The flip side of evaluation-awareness: can we steer or lightly fine-tune an eval-aware model so it behaves the way it would once deployed — and how reliably does that work?",
+      diagram: "d-toggle",
       title: "Evaluation Adaptation",
       subtitle: "Steering & fine-tuning models to act as if deployed",
       category: "Research",
@@ -348,6 +370,9 @@ window.SITE = {
     {
       id: "chess-strategic-adaptation",
       thumb: "chess",
+      nutshell:
+        "Give a chess agent a tool and tell it what the evaluation rewards. Does it change how much it searches, how confident it claims to be, or what it reports? A paired testbed that separates those channels — and compares self-report against a hidden log.",
+      diagram: "d-chess",
       title: "Chess Strategic Adaptation",
       subtitle: "Auditing evaluation-conditioned behaviour in tool-using chess agents",
       category: "Research",
@@ -388,6 +413,9 @@ window.SITE = {
     {
       id: "evonrl",
       thumb: "network",
+      nutshell:
+        "Node embeddings go stale when a graph changes. EvoNRL keeps a pool of random walks and refreshes only the ones an edge update actually touches, so embeddings stay accurate without recomputing everything from scratch.",
+      diagram: "d-net",
       title: "EvoNRL",
       subtitle: "Evolving Network Representation Learning Based on Random Walks",
       category: "Master's",
@@ -426,6 +454,9 @@ window.SITE = {
     {
       id: "bachelors-project",
       thumb: "market",
+      nutshell:
+        "In a pay-as-bid electricity auction, every accepted generator is paid its own bid rather than one common price. This thesis modelled and predicted the market's revenue under that rule using regression models in STATA and MATLAB.",
+      diagram: "d-market",
       title: "Study and Analysis of Wholesale Electricity Markets",
       subtitle: "BSc thesis · Electrical Engineering, Sharif University of Technology",
       category: "Bachelor's",

@@ -348,6 +348,16 @@ p { margin: 0 0 1.1rem; }
 .callout p + p { margin-top: 0.6rem; }
 .callout .label { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.45rem; }
 
+/* project "how it works" diagram + In-brief explainer */
+.callout.nutshell { margin: 0 0 1.2rem; }
+.diagram-fig { margin: 0.4rem 0 1.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); padding: 1.2rem 1.1rem 0.4rem; }
+.diagram-fig .diagram-svg { width: 100%; height: auto; display: block; }
+.diagram-fig figcaption { text-align: center; font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-faint); padding: 0.7rem 0 0.3rem; }
+@keyframes dgflow { to { stroke-dashoffset: -12; } }
+@keyframes dgpulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+.diagram-svg .dg-flow { stroke-dasharray: 6 6; animation: dgflow 1.05s linear infinite; }
+.diagram-svg .dg-pulse { animation: dgpulse 2.2s ease-in-out infinite; }
+
 /* unifying diagram */
 .diagram { width: 100%; height: auto; display: block; margin: 1.6rem 0; }
 .diagram-wrap { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); padding: 1.4rem; margin: 1.8rem 0; }

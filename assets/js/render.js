@@ -107,6 +107,135 @@
   THUMBS._default = THUMBS.tree;
   window.THUMBS = THUMBS;
 
+  /* larger, labelled, gently-animated "how it works" diagrams (one per page) */
+  var AR = '<defs><marker id="dgar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L7 4 L0 8 z" fill="var(--accent)"/></marker></defs>';
+  var DGV = function (body) {
+    return '<svg viewBox="0 0 640 210" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="diagram-svg" font-family="Inter, sans-serif" role="img">' + AR + body + '</svg>';
+  };
+  var flow = function (x1, x2) { return '<line class="dg-flow" x1="' + x1 + '" y1="90" x2="' + x2 + '" y2="90" stroke="var(--accent)" stroke-width="2.2" marker-end="url(#dgar)"/>'; };
+  var lbl = function (x, t) { return '<text x="' + x + '" y="164" text-anchor="middle" font-size="13.5" fill="var(--text-soft)">' + t + '</text>'; };
+  var box = function (x, w, accent) { return '<rect x="' + x + '" y="42" width="' + w + '" height="96" rx="12" fill="' + (accent ? 'var(--accent-soft)' : 'var(--surface)') + '" stroke="' + (accent ? 'var(--accent)' : 'var(--border-strong)') + '"/>'; };
+  // pentagon graph at (cx,88); fills = array of 5 bools (true=filled)
+  var pent = function (cx, fills, edgeOpacity) {
+    var p = [[cx, 62], [cx + 25, 80], [cx + 15, 109], [cx - 15, 109], [cx - 25, 80]];
+    var poly = '<polygon points="' + p.map(function (q) { return q[0] + ',' + q[1]; }).join(' ') + '" fill="none" stroke="var(--accent)" stroke-width="2" opacity="' + (edgeOpacity || 1) + '"/>';
+    var nodes = p.map(function (q, i) {
+      return fills[i]
+        ? '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="5.5" fill="var(--accent)"/>'
+        : '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="5.5" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/>';
+    }).join('');
+    return poly + nodes;
+  };
+
+  var DIAGRAMS = {
+    // TN-SHAP: mask features -> tensor network -> Shapley bars
+    "d-shapley-tn": DGV(
+      box(20, 160) +
+      '<g><rect x="66" y="58" width="22" height="15" rx="3" fill="var(--accent)"/><rect x="66" y="80" width="22" height="15" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.6"/><rect x="66" y="102" width="22" height="15" rx="3" fill="var(--accent)"/><rect x="112" y="58" width="22" height="15" rx="3" fill="var(--accent)"/><rect x="112" y="80" width="22" height="15" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.6"/><rect x="112" y="102" width="22" height="15" rx="3" fill="var(--accent)"/></g>' +
+      lbl(100, 'mask features (0/1)') + flow(184, 234) +
+      box(238, 164, true) +
+      '<g fill="none" stroke="var(--accent)" stroke-width="2"><line x1="320" y1="60" x2="296" y2="88"/><line x1="320" y1="60" x2="344" y2="88"/><line x1="296" y1="88" x2="282" y2="114"/><line x1="296" y1="88" x2="310" y2="114"/><line x1="344" y1="88" x2="330" y2="114"/><line x1="344" y1="88" x2="358" y2="114"/></g>' +
+      '<g fill="var(--accent)"><circle class="dg-pulse" cx="320" cy="60" r="6"/><circle cx="296" cy="88" r="4.5"/><circle cx="344" cy="88" r="4.5"/><circle cx="282" cy="114" r="4"/><circle cx="310" cy="114" r="4"/><circle cx="330" cy="114" r="4"/><circle cx="358" cy="114" r="4"/></g>' +
+      lbl(320, 'tensor network (χ)') + flow(406, 456) +
+      box(460, 160) +
+      '<g fill="var(--accent)"><rect x="492" y="86" width="16" height="40" rx="2"/><rect x="518" y="66" width="16" height="60" rx="2"/><rect x="544" y="98" width="16" height="28" rx="2"/><rect x="570" y="76" width="16" height="50" rx="2"/></g>' +
+      '<line x1="486" y1="126" x2="600" y2="126" stroke="var(--border-strong)" stroke-width="1.5"/>' +
+      lbl(540, 'Shapley φ + interactions')
+    ),
+    // TN-SHAP-G: masked graph -> graph-aligned TN -> node/edge attributions
+    "d-shapley-graph": DGV(
+      pent(100, [true, false, true, true, false]) + lbl(100, 'mask nodes') +
+      flow(140, 286) +
+      pent(320, [true, true, true, true, true]) +
+      '<line class="dg-pulse" x1="345" y1="80" x2="335" y2="109" stroke="var(--accent)" stroke-width="3.5"/>' +
+      lbl(320, 'graph-aligned tensor network') +
+      flow(360, 506) +
+      '<g>' + pent(540, [true, true, true, true, true]) + '</g>' +
+      '<circle cx="540" cy="62" r="9" fill="var(--accent)" opacity="0.9"/><circle cx="525" cy="109" r="7.5" fill="var(--accent)" opacity="0.6"/><circle cx="565" cy="80" r="4" fill="var(--accent)" opacity="0.35"/>' +
+      '<line x1="540" y1="62" x2="565" y2="80" stroke="var(--accent)" stroke-width="3.5"/>' +
+      lbl(540, 'node &amp; edge Shapley')
+    ),
+    // TN-SHAP-Q: QNN -> Owen integral -> exact phi
+    "d-shapley-q": DGV(
+      box(20, 170) +
+      '<g stroke="var(--accent)" stroke-width="2" fill="none"><line x1="42" y1="72" x2="168" y2="72"/><line x1="42" y1="106" x2="168" y2="106"/><rect x="58" y="62" width="20" height="20" rx="3" fill="var(--accent-soft)"/><line x1="120" y1="72" x2="120" y2="106"/><circle cx="120" cy="106" r="7"/><line x1="113" y1="106" x2="127" y2="106"/><line x1="120" y1="99" x2="120" y2="113"/></g><circle cx="120" cy="72" r="4.5" fill="var(--accent)"/>' +
+      lbl(105, 'single-Rᵧ QNN') + flow(196, 246) +
+      box(250, 150, true) +
+      '<g stroke="var(--accent)" fill="none" stroke-width="1.5" opacity="0.4"><line x1="272" y1="120" x2="378" y2="120"/><line x1="272" y1="56" x2="272" y2="120"/></g>' +
+      '<path d="M272 108 Q305 56 325 92 T378 68" fill="none" stroke="var(--accent)" stroke-width="2.4"/>' +
+      '<g fill="var(--accent)"><circle class="dg-pulse" cx="290" cy="92" r="4"/><circle cx="318" cy="86" r="4"/><circle cx="350" cy="80" r="4"/></g>' +
+      '<text x="325" y="150" text-anchor="middle" font-size="20" fill="var(--accent)">∫</text>' +
+      lbl(325, 'Owen integral (M points)') + flow(404, 454) +
+      box(460, 160) +
+      '<g fill="var(--accent)"><rect x="496" y="72" width="16" height="54" rx="2"/><rect x="522" y="92" width="16" height="34" rx="2"/><rect x="548" y="62" width="16" height="64" rx="2"/><rect x="574" y="84" width="16" height="42" rx="2"/></g>' +
+      '<line x1="490" y1="126" x2="600" y2="126" stroke="var(--border-strong)" stroke-width="1.5"/>' +
+      lbl(540, 'exact φ (features + gates)')
+    ),
+    // Multilinear steering: interaction of two directions
+    "d-steer": DGV(
+      '<g stroke="var(--text-faint)" stroke-width="1.5" opacity="0.5"><line x1="150" y1="150" x2="150" y2="40"/><line x1="150" y1="150" x2="470" y2="150"/></g>' +
+      '<text x="470" y="170" text-anchor="middle" font-size="13" fill="var(--text-soft)">direction u</text>' +
+      '<text x="150" y="34" text-anchor="middle" font-size="13" fill="var(--text-soft)">direction v</text>' +
+      '<path d="M150 150 Q300 150 340 60 Q360 40 470 40" fill="var(--accent-soft)" opacity="0.6" stroke="none"/>' +
+      '<g fill="var(--accent)" opacity="0.55"><circle class="dg-pulse" cx="250" cy="120" r="4"/><circle cx="300" cy="98" r="4"/><circle cx="350" cy="80" r="4"/><circle cx="400" cy="66" r="4"/><circle cx="210" cy="132" r="4"/></g>' +
+      '<line class="dg-flow" x1="150" y1="150" x2="410" y2="58" stroke="var(--accent)" stroke-width="2.6" marker-end="url(#dgar)"/>' +
+      '<text x="320" y="196" text-anchor="middle" font-size="13.5" fill="var(--text-soft)">read &amp; steer a concept that lives in the u × v interaction</text>'
+    ),
+    // Evaluation awareness: probe reads "evaluation" from activations
+    "d-eye": DGV(
+      box(30, 150) +
+      '<g fill="var(--accent)" opacity="0.25"><rect x="54" y="58" width="16" height="16" rx="2"/><rect x="90" y="58" width="16" height="16" rx="2"/><rect x="126" y="58" width="16" height="16" rx="2"/><rect x="54" y="80" width="16" height="16" rx="2"/><rect x="90" y="80" width="16" height="16" rx="2"/><rect x="126" y="80" width="16" height="16" rx="2"/><rect x="54" y="102" width="16" height="16" rx="2"/><rect x="90" y="102" width="16" height="16" rx="2"/><rect x="126" y="102" width="16" height="16" rx="2"/></g>' +
+      '<line class="dg-flow" x1="150" y1="50" x2="150" y2="130" stroke="var(--accent)" stroke-width="2"/>' +
+      lbl(105, 'activations') + flow(190, 300) +
+      '<text x="245" y="80" text-anchor="middle" font-size="13" fill="var(--text-soft)">probe</text>' +
+      '<g fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linejoin="round"><path d="M360 90 Q430 44 500 90 Q430 136 360 90 Z"/><circle cx="430" cy="90" r="19"/></g>' +
+      '<circle class="dg-pulse" cx="430" cy="90" r="8.5" fill="var(--accent)"/>' +
+      lbl(430, 'evaluation vs. deployment?')
+    ),
+    // Evaluation adaptation: steer eval-aware model toward deploy behaviour
+    "d-toggle": DGV(
+      '<rect x="70" y="56" width="120" height="68" rx="14" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.2"/>' +
+      '<text x="130" y="95" text-anchor="middle" font-size="14" fill="var(--accent)" font-weight="600">eval-aware</text>' +
+      '<rect x="450" y="56" width="120" height="68" rx="14" fill="none" stroke="var(--accent)" stroke-width="2.2"/>' +
+      '<text x="510" y="95" text-anchor="middle" font-size="14" fill="var(--text-soft)" font-weight="600">deployed</text>' +
+      '<line class="dg-flow" x1="196" y1="90" x2="444" y2="90" stroke="var(--accent)" stroke-width="2.6" marker-end="url(#dgar)"/>' +
+      '<rect x="250" y="76" width="140" height="28" rx="14" fill="var(--surface)" stroke="var(--border-strong)"/>' +
+      '<circle class="dg-pulse" cx="370" cy="90" r="11" fill="var(--accent)"/>' +
+      '<text x="320" y="176" text-anchor="middle" font-size="13.5" fill="var(--text-soft)">steer / fine-tune toward deployment behaviour</text>'
+    ),
+    // Chess: disclosed objective -> which channel moves
+    "d-chess": DGV(
+      '<g fill="var(--accent)" opacity="0.2"><rect x="60" y="46" width="22" height="22"/><rect x="104" y="46" width="22" height="22"/><rect x="82" y="68" width="22" height="22"/><rect x="60" y="90" width="22" height="22"/><rect x="104" y="90" width="22" height="22"/></g>' +
+      '<g fill="none" stroke="var(--accent)" stroke-width="2"><rect x="60" y="46" width="66" height="66" rx="3"/><line x1="82" y1="46" x2="82" y2="112"/><line x1="104" y1="46" x2="104" y2="112"/><line x1="60" y1="68" x2="126" y2="68"/><line x1="60" y1="90" x2="126" y2="90"/></g>' +
+      '<path d="M71 101 V57 H115" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/><circle class="dg-pulse" cx="115" cy="57" r="5" fill="var(--accent)"/>' +
+      lbl(93, 'disclosed objective') + flow(150, 300) +
+      '<g font-size="13" fill="var(--text)"><rect x="330" y="50" width="240" height="26" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/><text x="345" y="67" fill="var(--text-soft)">search depth</text>' +
+      '<rect x="330" y="82" width="240" height="26" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/><text x="345" y="99" fill="var(--text-soft)">reported confidence</text>' +
+      '<rect x="330" y="114" width="240" height="26" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/><text x="345" y="131" fill="var(--text-soft)">self-report vs. hidden log</text></g>' +
+      lbl(450, 'which channel changes?')
+    ),
+    // EvoNRL: edge update -> refresh only affected walks
+    "d-net": DGV(
+      '<g stroke="var(--accent)" stroke-width="1.6" fill="none" opacity="0.3"><line x1="120" y1="60" x2="210" y2="96"/><line x1="210" y1="96" x2="160" y2="150"/><line x1="210" y1="96" x2="320" y2="66"/><line x1="320" y1="66" x2="410" y2="120"/><line x1="320" y1="66" x2="270" y2="40"/></g>' +
+      '<path class="dg-flow" d="M120 60 L210 96 L320 66 L410 120" fill="none" stroke="var(--accent)" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#dgar)"/>' +
+      '<line class="dg-pulse" x1="160" y1="150" x2="410" y2="120" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 5"/>' +
+      '<g fill="var(--accent)"><circle cx="120" cy="60" r="5"/><circle cx="210" cy="96" r="5"/><circle cx="160" cy="150" r="5"/><circle cx="320" cy="66" r="5"/><circle cx="410" cy="120" r="5"/><circle cx="270" cy="40" r="5"/></g>' +
+      '<text x="470" y="86" font-size="13.5" fill="var(--text-soft)">random walk</text><text x="470" y="120" font-size="13.5" fill="var(--text-soft)">new edge →</text><text x="470" y="138" font-size="12.5" fill="var(--text-faint)">refresh only</text>' +
+      lbl(265, 'evolving network: update only affected walks')
+    ),
+    // Bachelor's: pay-as-bid supply stack
+    "d-market": DGV(
+      '<g stroke="var(--text-faint)" stroke-width="1.5" opacity="0.4" fill="none"><line x1="150" y1="40" x2="150" y2="150"/><line x1="150" y1="150" x2="500" y2="150"/></g>' +
+      '<g fill="var(--accent)" opacity="0.18"><rect x="170" y="126" width="46" height="24"/><rect x="226" y="104" width="46" height="46"/><rect x="282" y="86" width="46" height="64"/><rect x="338" y="66" width="46" height="84"/><rect x="394" y="52" width="46" height="98"/></g>' +
+      '<path d="M170 126 H216 V104 H272 V86 H328 V66 H384 V52 H440" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>' +
+      '<line class="dg-flow" x1="150" y1="90" x2="470" y2="90" stroke="var(--accent)" stroke-width="1.8" stroke-dasharray="6 6"/>' +
+      '<circle class="dg-pulse" cx="305" cy="86" r="6" fill="var(--accent)"/>' +
+      '<text x="482" y="94" font-size="12.5" fill="var(--text-faint)">demand</text>' +
+      lbl(325, 'pay-as-bid: each accepted bid paid its own price')
+    )
+  };
+  window.DIAGRAMS = DIAGRAMS;
+
   /* link metadata: type -> {label, icon} */
   var LINK_META = {
     paper: { label: "Paper", icon: "pdf" },
@@ -301,6 +430,13 @@
           '<p><a class="btn btn--sm" href="' + esc(p.poster) + '" target="_blank" rel="noopener">' + I.poster + ' Open full poster (PDF)</a></p>'
         : "";
 
+      var brief = p.nutshell
+        ? '<div class="callout nutshell reveal"><span class="label">In brief</span><p>' + p.nutshell + '</p></div>'
+        : "";
+      var diagram = (p.diagram && DIAGRAMS[p.diagram])
+        ? '<figure class="diagram-fig reveal">' + DIAGRAMS[p.diagram] + '<figcaption>How it works</figcaption></figure>'
+        : "";
+
       var meta = [];
       if (p.authors) meta.push(esc(p.authors));
       if (p.venue) meta.push("<em>" + esc(p.venue) + "</em>");
@@ -315,6 +451,7 @@
           '<div class="detail-links">' + (Object.keys(p.links || {}).length ? linkPills(p.links, "btn btn--sm") : '<span class="muted">Links pending.</span>') + '</div>' +
         '</div></header>' +
         '<div class="container section detail-body"><div class="prose">' +
+          brief + diagram +
           section("Overview", p.overview ? "<p>" + p.overview + "</p>" : "") +
           section("Motivation", p.motivation ? "<p>" + p.motivation + "</p>" : "") +
           section("Methods", list(p.methods)) +
