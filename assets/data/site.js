@@ -92,6 +92,16 @@ window.SITE = {
      ---------------------------------------------------------------------- */
   posts: [
     {
+      id: "tenchess",
+      title: "TenChess: Do Tensor-Network Explainability Tools See Anything in a Chess Game?",
+      date: "2026-07",
+      readingTime: "14 min read",
+      url: "blog/tenchess/",
+      tags: ["Explainable AI", "Tensor Networks", "Shapley Values", "Chess"],
+      excerpt:
+        "A pre-registered overnight prototype: chess games as tensors, Shapley-style attribution with negative controls, and tensor decompositions of games, tablebases, and a real chess net — with the failed hypotheses reported as plainly as the confirmed ones."
+    },
+    {
       id: "tnshap-series",
       title: "From Shapley Values to Tensor Networks: The TN-SHAP Series",
       date: "2026-07",

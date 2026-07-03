@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TenChess: Do Tensor-Network Explainability Tools See Anything in a Chess Game? — Farzaneh Heidari</title>
+  <meta name="description" content="A pre-registered research prototype: chess games as tensors, TN-SHAP-style square attribution with negative controls, CP/Tucker decomposition, tablebase tensor ranks, tactic ground truth for interaction indices, and Maia-2 activation factors — failures reported as plainly as the successes." />
+  <meta name="author" content="Farzaneh Heidari" />
+  <link rel="canonical" href="https://farzana0.github.io/blog/tenchess/" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="TenChess: Do Tensor-Network Explainability Tools See Anything in a Chess Game?" />
+  <meta property="og:description" content="Pre-registered probes of tensor-network attribution and decomposition on chess: what held up, what failed, and why the failures are the interesting part." />
+  <meta property="og:url" content="https://farzana0.github.io/blog/tenchess/" />
+  <meta property="og:image" content="https://farzana0.github.io/assets/img/blog/tenchess_attribution_boards.png" />
+  <meta property="article:author" content="Farzaneh Heidari" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TenChess: Do Tensor-Network Explainability Tools See Anything in a Chess Game?" />
+  <meta name="twitter:description" content="Chess as a transparent testbed for tensor-network explainability, with pre-registered hypotheses and honest negative results." />
+  <meta name="twitter:image" content="https://farzana0.github.io/assets/img/blog/tenchess_attribution_boards.png" />
+
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "TenChess: Do Tensor-Network Explainability Tools See Anything in a Chess Game?",
+    "author": { "@type": "Person", "name": "Farzaneh Heidari", "url": "https://farzana0.github.io/" },
+    "datePublished": "2026-07",
+    "url": "https://farzana0.github.io/blog/tenchess/",
+    "keywords": ["explainable AI", "tensor networks", "Shapley values", "chess", "pre-registration", "interaction indices"]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/index.html"><img class="mark" src="/assets/img/favicon.svg" alt="" width="26" height="26" />Farzaneh Heidari</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/projects.html" data-match="project">Projects</a></li>
+        <li><a href="/publications.html">Publications</a></li>
+        <li><a href="/blog.html" data-match="blog">Blog</a></li>
+        <li><a href="/news.html">News</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        </button>
+        <button class="icon-btn nav-toggle" data-nav-toggle aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <header class="post-hero">
+        <div class="container">
+          <nav class="breadcrumb"><a href="/index.html">Home</a> / <a href="/blog.html">Blog</a> / TenChess</nav>
+          <div class="post-meta">Jul 2026 · 14 min read · Farzaneh Heidari</div>
+          <h1>TenChess: Do Tensor-Network Explainability Tools See Anything in a Chess Game?</h1>
+          <p class="dek">A pre-registered research prototype: chess games as tensors, Shapley-style attribution with negative controls, tensor decompositions of games, tablebases, and a real chess net's activations — with the failed hypotheses reported as plainly as the confirmed ones.</p>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <div class="container">
+          <div class="prose">
+
+            <p><em>This is a research sketch, built and run in one overnight session on CPU. Every number and figure below regenerates from one script (<code>./run_all.sh</code>, seed 0) in minutes; hypotheses, metrics, and thresholds were frozen in pre-registration files before each study ran, and the annotations used as ground truth were fixed before any attribution code existed. Nothing here should be read as more than a first probe — but it is an honest one.</em></p>
+
+            <h2>1. Chess as a tensor testbed</h2>
+            <p>A chess position is naturally a tensor: an 8×8 board with 19 feature planes (piece occupancies, side to move, castling rights, en passant, halfmove clock). Less obviously, each <em>move</em> is a sparse <strong>affine operator</strong> on the flattened position — vec(X′) = A·vec(X) + b, with A a 1216×1216 sparse matrix relocating an occupancy bit and b carrying the constant-plane updates. The repository verifies this identity exactly on every move of every bundled game, including castling, en passant, and promotions (max error ~4·10⁻⁹).</p>
+            <p>That framing makes chess a cheap, fully transparent testbed for tensor-network explainability tools: coalition games over squares are small enough to enumerate or sample properly, ground truth exists (famous tactics, tablebases, machine-verifiable motifs), and everything runs on a laptop. The question is never "can we explain chess" — it is <strong>"do these tools track anything chess-meaningful, or are they noise?"</strong> A well-documented negative answer counts as success.</p>
+
+            <h2>2. Study 1 — square attribution on famous games</h2>
+            <p>Six public-domain pre-1900 games (the Immortal, the Evergreen, Morphy's Opera game, Légal's mate, Paulsen–Morphy 1857, Steinitz–von Bardeleben 1895), with 15 key tactical moments annotated <em>before any attribution code ran</em>. Players are the occupied non-king squares; the coalition game masks pieces (three baselines: empty-square, modal-board, permuted-piece); values come from cheap heuristics (material, mobility, king safety, a combined blend) plus a <strong>seeded random value function as negative control</strong>. Attribution is TN-SHAP-style: fit a rank-4 multilinear (CP) surrogate to 1,500 sampled coalitions, read exact Shapley values off it by dynamic programming; Monte-Carlo Shapley with standard errors runs alongside as a check.</p>
+
+            <figure>
+              <img src="/assets/img/blog/tenchess_attribution_boards.png" alt="Three chess boards with diverging red-blue attribution heatmaps and outlined annotated tactic squares." loading="lazy" />
+              <figcaption>TN-SHAP attributions on three annotated positions (+ favors White; outlined squares = pre-registered tactic annotation). The attribution is material-dominated: queens carry the largest values everywhere. <span class="muted">experiments/02 + 05, seed 0.</span></figcaption>
+            </figure>
+
+            <p><strong>H1 (attributions concentrate on tactic squares) — failed as pre-registered.</strong> Mean top-k overlap with annotated squares was 0.243 vs 0.140 under a random-draw null, but the registered aggregate (Stouffer's Z over per-moment permutation p-values) came out at p = 1.0. The reason is instructive: at 6 of 15 moments the overlap was exactly zero, and with a discrete statistic those moments carry p = 1.0, which Stouffer converts into large negative evidence that swamps the successes (best moment: the Immortal before 18.Bd6, overlap 0.6, p = 0.025). Pre-registering Stouffer on discrete permutation p-values was a specification mistake — but it was the registered analysis, so the verdict stands. An exploratory aggregate-mean test gives p = 0.0084 (heuristic) vs p = 0.68 (random control): a real but weak, inconsistent signal — attribution finds queen-sacrifice moments and completely misses quiet preparation moves.</p>
+
+            <figure>
+              <img src="/assets/img/blog/tenchess_h1_h2_overlap.png" alt="Dot plot of per-moment overlap for the combined heuristic and the random control against a null band." loading="lazy" />
+              <figcaption>Observed top-k overlap per moment (blue: combined heuristic; yellow: random control) against the central 95% of the null. <span class="muted">experiments/02 + 05, seed 0.</span></figcaption>
+            </figure>
+
+            <p><strong>H2 (negative control) — behaved.</strong> Under the random value function there is no concentration on annotated squares, and the rank-4 surrogate that fits the heuristic games at held-out R² ≥ 0.997 cannot fit the random game at all (R² ≤ 0.14). The pipeline does not invent structure where there is none — which is what licenses reading anything else at face value.</p>
+
+            <figure>
+              <img src="/assets/img/blog/tenchess_surrogate_fidelity.png" alt="Held-out R-squared of the surrogate: near 1.0 for the heuristic at all moments, near zero for the random control." loading="lazy" />
+              <figcaption>The most interesting positive finding: coalition games of material+mobility+king-safety heuristics are <em>almost exactly rank-4 multilinear</em> over 19–30 squares — the "tensor network" in TN-SHAP is cheap because the explained function is genuinely low-rank. <span class="muted">experiments/02 + 05, seed 0.</span></figcaption>
+            </figure>
+
+            <p><strong>H4 (stability across masking baselines) — confirmed</strong> (mean Spearman ρ = 0.62 &gt; 0.5), with a caveat worth knowing: removal-style baselines agree well with each other (empty↔permuted ρ = 0.88) while the modal-board baseline — which can <em>replace</em> a piece with a different one — is the outlier (ρ ≈ 0.5). The choice between removal and replacement baselines is not cosmetic.</p>
+
+            <h2>3. Study 2 — CP decomposition of the game tensor</h2>
+            <p><strong>H3 (temporal factors peak at material swings) — failed, informatively.</strong> Rank-4 CP temporal factors of G ∈ ℝ<sup>T×8×8×19</sup> were peak-picked at their largest one-step change; mean |Δmaterial| at those plies is <strong>0.21 vs 0.75 at random plies</strong> — not just null but reversed. The audit explains it: peaks land disproportionately on <em>castling</em> moves (28%). In this encoding a capture changes 2 of 1,216 tensor entries while castling flips four 64-entry constant planes; CP chases Frobenius mass, locks onto the side-to-move parity oscillation and meta-plane steps, and is nearly blind to single-piece events. <strong>Decomposing a raw feature-plane encoding explains the encoding, not the game.</strong></p>
+
+            <figure>
+              <img src="/assets/img/blog/tenchess_temporal_factors.png" alt="Temporal factor curves per game showing a strong period-2 zig-zag, with capture plies shaded and factor peaks marked." loading="lazy" />
+              <figcaption>CP temporal factors (rank 4) per game; shaded columns are material-change plies, ▼ the factor peaks H3 tested. The period-2 zig-zag is the side-to-move plane. <span class="muted">experiments/04 + 05, seed 0.</span></figcaption>
+            </figure>
+
+            <h2>4. Study 3 — how compressible is perfect play?</h2>
+            <p>An endgame tablebase is an <em>exact</em> value function on a complete state space — a rare object in ML — and its tensor rank is a crisp measure of how much multilinear structure perfect play contains. We generated KRvK and KQvK distance-to-mate tables from scratch by retrograde induction (validated hard: max mate-in-16/10 match theory; 200/200 greedy-DTM playouts mate in exactly the tabulated plies), reshaped them into 8⁶ tensors over factored coordinates, and swept tensor-train ranks against a <strong>label-shuffled control with identical marginals</strong>.</p>
+
+            <figure>
+              <img src="/assets/img/blog/tenchess_tablebase_ranks.png" alt="Tensor-train error versus bond dimension for KRvK and KQvK: real tensors well below shuffled controls at every rank, but never below the 5 percent bar." loading="lazy" />
+              <figcaption>Perfect play compresses far better than its shuffled shadow at every rank (3–4× lower error) — but never reached the pre-registered "&lt;5% error at &gt;10× compression" bar, so <strong>A1 fails at its threshold</strong>. The DTM function's sharp parity and adjacency cliffs resist factorization. <span class="muted">experiments/07 + 10, seed 0.</span></figcaption>
+            </figure>
+
+            <p>The secondary hypothesis (spectra differ between deep wins and shallow wins) split: +33% effective-rank difference for KRvK (supported), +11% for KQvK (not). We could not find prior work on tensor ranks of tablebases; treat this as a first data point, not a law.</p>
+
+            <h2>5. Study 4 — tactics as ground truth for interaction indices</h2>
+            <p>First-order Shapley is structurally the wrong tool for tactics: a fork is a labeled <em>pair</em> interaction, a pin a labeled <em>triple</em>. Existing interaction benchmarks (shapiq, Faith-Shap) measure estimator convergence to the index — not whether the index recovers interactions that are semantically real. Chess supplies that ground truth mechanically: we constructed 50 knight-fork and 50 relative-pin positions plus matched controls with the tactic geometrically broken by one square, verified by attack predicates, never hand-labeled — and computed <strong>exact</strong> interaction indices from full coalition tables under a 2-ply material oracle.</p>
+
+            <figure>
+              <img src="/assets/img/blog/tenchess_interaction_fork.png" alt="Two interaction heatmaps: a fork position lights up as a triangle of three strong pairs; the broken control shows almost nothing." loading="lazy" />
+              <figcaption>Exact pairwise interactions on one fork vs its broken control. The fork's signature is a <em>triangle</em>: both knight–target pairs plus the target–target substitution pair. <span class="muted">experiments/08 + 10, seed 0.</span></figcaption>
+            </figure>
+
+            <ul>
+              <li><strong>Forks (pairwise) — failed:</strong> "both true pairs in the top 3" happened in 8% of forks vs 6% of controls (p = 0.23), for diagnosable structural reasons: the interaction is value-asymmetric (Black rescues the more valuable piece) and the substitution edge of the triangle competes for exactly the top-3 slots the criterion reserved.</li>
+              <li><strong>Pins (third-order) — confirmed, strongly:</strong> the (pinner, pinned, shielded-queen) triple carries above-median third-order interaction in <strong>96% of pin positions vs 46% of broken controls</strong> (p ≈ 10⁻¹²).</li>
+              <li><strong>The control did its job by failing:</strong> under the random value function the joint two-pair statistic still fired (p = 0.009) — because the two "true" pairs share the knight, their indices are correlated, and our independence null for the joint statistic is anti-conservative. The single-pair statistic under the random function sits exactly at chance (p = 0.52). This flaw makes the fork test's null anti-conservative too, so its failure stands a fortiori; the pin test's within-position null is unaffected.</li>
+              <li><strong>Budgets don't matter here:</strong> detection is flat from 4 to 128 Monte-Carlo samples per pair — the exact index already fails the fork criterion, so sampling is not the bottleneck.</li>
+              <li><strong>Exploratory surprise:</strong> the <em>static</em> heuristic detects forks (rank-percentile p = 0.001) where the 2-ply look-ahead oracle does not — minimax <em>realizes</em> the fork's value (Black saves what it can), flattening the joint dependence that raw attack-geometry terms retain.</li>
+            </ul>
+
+            <h2>6. Study 5 — unsupervised decomposition of a real chess net</h2>
+            <p>McGrath et al. showed human chess concepts are linearly decodable from AlphaZero with <em>supervised</em> probes. The open variant: does <strong>unsupervised</strong> tensor decomposition find concept-like structure without being told what to look for — and is it about training rather than architecture? Every analysis ran identically on a randomly initialized net of the same architecture; no trained-vs-random comparison, no claim. We hooked 4 depths of <strong>Maia-2 "rapid"</strong> (23M params, trained on human games) on 2,000 positions and Tucker-decomposed each (N, 8, 8, C) activation tensor.</p>
+
+            <figure>
+              <img src="/assets/img/blog/tenchess_activations.png" alt="Left: effective rank versus depth, trained far below random. Right: concept alignment bars, trained above random for all five concepts." loading="lazy" />
+              <figcaption>Left: training <em>collapses</em> the activation spectrum (effective rank ~1–1.9 vs 2.8–4.7 for random init). Right: best correlation between a Tucker factor and each hand-coded concept. <span class="muted">experiments/09 + 10, seed 0.</span></figcaption>
+            </figure>
+
+            <p>Both pre-registered hypotheses were confirmed — with honest caveats. Concept alignment beats the permutation null and the random net in 18 (depth, concept) cells, but the dominant factor is essentially <em>piece count</em> (r = 0.89), an input statistic; genuinely chess-like concepts are present but weak (king safety r = 0.26 vs 0.07 random at the deepest tap). And the effective-rank result, while large (76% relative difference), could plausibly involve normalization effects — one net, one seed pair. Unsupervised factors find far less than supervised probes did.</p>
+
+            <h2>7. Related work</h2>
+            <p>Piece-level perturbation saliency for chess exists — <a href="https://arxiv.org/abs/1912.12191">SARFA (ICLR 2020)</a> and a recent <a href="https://arxiv.org/abs/2510.25775">first-order piece-SHAP adaptation (2025)</a> — so Study 1's contribution is the pre-registered evaluation, the negative control, and the low-rank fidelity finding, not the method. Interaction benchmarks (<a href="https://jmlr.org/papers/v24/22-0202.html">Faith-Shap</a>, <a href="https://arxiv.org/pdf/2410.01649">shapiq</a>) measure estimator convergence; we could not find prior work using tactics as semantic ground truth for interaction order, nor tensor-rank analyses of tablebases. Concept probing in chess nets is supervised in prior work (<a href="https://arxiv.org/abs/2111.09259">McGrath et al.</a>; the <a href="https://arxiv.org/abs/2406.00877">learned look-ahead line</a>).</p>
+
+            <h2>8. Limitations</h2>
+            <ul>
+              <li><strong>Heuristic value functions</strong> — material dominates, so attribution largely rediscovers material; no engine was installed on the build machine.</li>
+              <li><strong>Tiny data</strong> — six games, 15 moments, 100 constructed tactic positions, two 3-piece endings, one net. Nothing here estimates variance across chess in general.</li>
+              <li><strong>Specification mistakes are reported, not repaired</strong> — the Stouffer aggregation (Study 1) and the correlated-pair null (Study 4) were both flawed in ways we only saw after the results; the registered analyses are reported unchanged, the diagnoses labeled exploratory.</li>
+              <li><strong>Encoding choices</strong> — Study 2's failure is largely a statement about the 19-channel encoding; the piece-count confound hangs over Study 5's alignments.</li>
+            </ul>
+
+            <h2>9. Verdict</h2>
+            <p>Across ten pre-registered hypotheses in five studies: <strong>confirmed</strong> — baseline stability (H4), pins as third-order interactions (B2), trained-vs-random activation structure (C1, C2); <strong>failed</strong> — tactic-square concentration (H1), temporal-material alignment (H3), strict tablebase low-rankness (A1), pairwise fork recovery (B1); one split (A2), one control-exposed null flaw (B3). The one-line summary: <em>first-order attribution on heuristic values mostly re-explains material and raw-encoding CP mostly re-explains the encoding — but the coalition games are startlingly low-rank, third-order indices genuinely recover pins where pairwise indices structurally miss forks, perfect play is measurably more compressible than its shuffled shadow without being "low-rank", and training a real chess net collapses its activation spectrum onto a handful of weakly concept-tracking directions.</em></p>
+            <p class="muted">Prototype built and run autonomously overnight; all pre-registration files, decision logs, and the full run report live alongside the code.</p>
+
+            <div class="mt-4"><a class="btn btn--ghost" href="/blog.html">← Back to blog</a></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© <span id="year"></span> Farzaneh Heidari</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/about.html">About</a><a href="/projects.html">Projects</a><a href="/publications.html">Publications</a><a href="/blog.html">Blog</a><a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
