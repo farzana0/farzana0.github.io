@@ -92,16 +92,6 @@ window.SITE = {
      ---------------------------------------------------------------------- */
   posts: [
     {
-      id: "tenchess",
-      title: "A Pin Is a Three-Piece Object: Chess Tactics as Ground Truth for Interaction Attribution",
-      date: "2026-07",
-      readingTime: "11 min read",
-      url: "blog/tenchess/",
-      tags: ["Explainable AI", "Tensor Networks", "Shapley Values", "Chess"],
-      excerpt:
-        "Chess tactics are interactions with a definite order — a pin is a triple, a fork is a triangle. Generated positions with matched broken controls show third-order indices recover pins almost perfectly, and explain exactly why pairwise indices miss forks."
-    },
-    {
       id: "tnshap-series",
       title: "From Shapley Values to Tensor Networks: The TN-SHAP Series",
       date: "2026-07",
