@@ -92,6 +92,16 @@ window.SITE = {
      ---------------------------------------------------------------------- */
   posts: [
     {
+      id: "tenchess",
+      title: "Looking at Chess Through Tensor Decompositions",
+      date: "2026-07",
+      readingTime: "5 min read",
+      url: "blog/tenchess/",
+      tags: ["Tensor Networks", "Chess", "Interpretability"],
+      excerpt:
+        "What happens if you represent a chess game as a tensor instead of a sequence of moves? A short research note: faithful low-rank surrogates, attributions that track real game structure, and a different set of questions."
+    },
+    {
       id: "tnshap-series",
       title: "From Shapley Values to Tensor Networks: The TN-SHAP Series",
       date: "2026-07",

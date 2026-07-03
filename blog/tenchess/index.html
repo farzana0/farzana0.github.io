@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Looking at Chess Through Tensor Decompositions — Farzaneh Heidari</title>
+  <meta name="description" content="What happens if you represent a chess game as a tensor instead of a sequence of moves? A short research note on multilinear structure in chess: faithful low-rank surrogates, attributions that track real game structure, and coherent temporal factors." />
+  <meta name="author" content="Farzaneh Heidari" />
+  <link rel="canonical" href="https://farzana0.github.io/blog/tenchess/" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Looking at Chess Through Tensor Decompositions" />
+  <meta property="og:description" content="What happens if you represent a chess game as a tensor instead of a sequence of moves?" />
+  <meta property="og:url" content="https://farzana0.github.io/blog/tenchess/" />
+  <meta property="og:image" content="https://farzana0.github.io/assets/img/og-image.svg" />
+  <meta property="article:author" content="Farzaneh Heidari" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Looking at Chess Through Tensor Decompositions" />
+  <meta name="twitter:description" content="What happens if you represent a chess game as a tensor instead of a sequence of moves?" />
+  <meta name="twitter:image" content="https://farzana0.github.io/assets/img/og-image.svg" />
+
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Looking at Chess Through Tensor Decompositions",
+    "author": { "@type": "Person", "name": "Farzaneh Heidari", "url": "https://farzana0.github.io/" },
+    "datePublished": "2026-07",
+    "url": "https://farzana0.github.io/blog/tenchess/",
+    "keywords": ["chess", "tensor decompositions", "multilinear models", "interpretability"]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/index.html"><img class="mark" src="/assets/img/favicon.svg" alt="" width="26" height="26" />Farzaneh Heidari</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/projects.html" data-match="project">Projects</a></li>
+        <li><a href="/publications.html">Publications</a></li>
+        <li><a href="/blog.html" data-match="blog">Blog</a></li>
+        <li><a href="/news.html">News</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        </button>
+        <button class="icon-btn nav-toggle" data-nav-toggle aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <header class="post-hero">
+        <div class="container">
+          <nav class="breadcrumb"><a href="/index.html">Home</a> / <a href="/blog.html">Blog</a> / Chess &amp; Tensors</nav>
+          <div class="post-meta">Jul 2026 · 5 min read · Farzaneh Heidari</div>
+          <h1>Looking at Chess Through Tensor Decompositions</h1>
+          <p class="dek">What happens if you represent a chess game as a tensor instead of a sequence of moves?</p>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <div class="container">
+          <div class="prose">
+
+            <p>Chess is almost always represented as a sequence: position, move, position, move. That representation is so natural that it's easy to forget it is a choice. But most of the quantities that matter in chess don't live on a line. They live on grids and products of grids — pieces on squares, squares over time, two players' pieces interacting with each other. A game is arguably less like a sentence and more like a block of structured data with several axes: rank, file, piece type, time.</p>
+
+            <p>That made me wonder what happens if you take the multilinear view seriously. Represent a position as a stack of 8×8 planes, one per piece type and color. Stack the positions of a game along a time axis and you get a tensor. Once you say the word "tensor," a different toolbox becomes available — low-rank decompositions, multilinear surrogate models, structured factorizations — none of which has anything to do with playing better chess. The point isn't engine strength. The point is understanding structure: does chess, viewed this way, have any?</p>
+
+            <p>Before that toolbox can tell you anything, there's a question that has to come first: does the multilinear view <em>preserve</em> the game, or does it flatten it into something that merely looks like chess? So the first experiment was deliberately modest. I took a handful of classic games, defined some simple position-evaluation functions (material, mobility, king safety), and asked three plain questions. Can a small multilinear model faithfully stand in for a chess value function? Do the importance scores you read off such a model point at strategically relevant squares? And do low-rank decompositions of a whole game find coherent temporal structure, or just noise?</p>
+
+            <p>The first observation is the one everything else rests on. If you treat the pieces of a position as things that can be present or absent — mask a subset, ask the evaluation how good the position still is — you induce a function over piece subsets. I fit a rank-4 multilinear surrogate to a small sample of these masked positions, and it reproduced the evaluation on held-out maskings almost exactly, position after position. I expected decent fits; I did not expect near-perfect ones. And the natural worry — that a flexible surrogate would fit anything — has a direct answer: when I replaced the evaluation with a seeded random function of the position, the same machinery could not fit it at all. The structure being captured is in the game, not in the curve-fitting. Whatever else is true, these evaluation landscapes are genuinely low-rank multilinear objects, which is exactly the property the tensor toolbox needs.</p>
+
+            <p>Because the surrogate is faithful, the importance scores it implies (in the spirit of Shapley values, if you know that literature) actually mean something. Here the result is encouraging but not magical: at famous tactical moments, the squares the attribution emphasized overlapped the squares involved in the combination noticeably more often than chance — and the move actually played in the game tended to sit near the top of the induced move ranking, most strikingly at queen sacrifices. The same analysis under the random-control evaluation showed nothing at all, which is what suggests the alignment is tracking real game structure rather than an artifact of the method. The signal is uneven — sharp at forcing moments, weak at quiet preparatory moves — and I want to be careful not to claim more than that.</p>
+
+            <p>The third observation is smaller but pleasant: decomposing whole-game tensors into a few components produced coherent, piecewise temporal factors — stable regimes separated by clean transitions — rather than the unstructured noise I half expected from so crude an encoding. What the components latch onto first is as much the bookkeeping of the representation as the drama of the game, which is itself a useful lesson: the encoding shapes what any decomposition can see. But games, viewed as tensors, are evidently far from random along the time axis.</p>
+
+            <p>Not everything worked. Some analyses came back weak or inconclusive, and a few behaved exactly the way negative controls should. That's the expected texture of exploratory work; the goal was never to validate every idea, but to find out which directions deserve real effort.</p>
+
+            <p>What I take away is not that tensor methods are "the right representation" for chess. The experiment can't establish that, and I don't believe it yet myself. What it suggests is narrower and, to me, more interesting: the multilinear view exposes questions that are awkward to even ask in the sequential one. Can strategic motifs emerge as tensor components? Do the interactions between pieces have a measurable order — are some tactics intrinsically pairwise and others intrinsically three-way? Can decompositions across many games reveal recurring strategic phases? I find those questions more interesting than anything in the experiment itself, and that seems like the right reason to keep going.</p>
+
+            <p class="muted">Code and data: <a href="https://github.com/farzana0/tnechess">github.com/farzana0/tnechess</a>.</p>
+
+            <div class="mt-4"><a class="btn btn--ghost" href="/blog.html">← Back to blog</a></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© <span id="year"></span> Farzaneh Heidari</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/about.html">About</a><a href="/projects.html">Projects</a><a href="/publications.html">Publications</a><a href="/blog.html">Blog</a><a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
