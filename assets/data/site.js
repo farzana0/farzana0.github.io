@@ -93,13 +93,13 @@ window.SITE = {
   posts: [
     {
       id: "tenchess",
-      title: "TenChess: Do Tensor-Network Explainability Tools See Anything in a Chess Game?",
+      title: "A Pin Is a Three-Piece Object: Chess Tactics as Ground Truth for Interaction Attribution",
       date: "2026-07",
-      readingTime: "14 min read",
+      readingTime: "11 min read",
       url: "blog/tenchess/",
       tags: ["Explainable AI", "Tensor Networks", "Shapley Values", "Chess"],
       excerpt:
-        "A pre-registered overnight prototype: chess games as tensors, Shapley-style attribution with negative controls, and tensor decompositions of games, tablebases, and a real chess net — with the failed hypotheses reported as plainly as the confirmed ones."
+        "Chess tactics are interactions with a definite order — a pin is a triple, a fork is a triangle. Generated positions with matched broken controls show third-order indices recover pins almost perfectly, and explain exactly why pairwise indices miss forks."
     },
     {
       id: "tnshap-series",
