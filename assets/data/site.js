@@ -28,7 +28,7 @@ window.SITE = {
       dblp: "https://dblp.org/pid/231/1013.html",
       linkedin: "https://www.linkedin.com/in/farzaneh-heidari-32919653/",
       mila: "https://mila.quebec/en/person/farzaneh-heidari/",
-      cv: "assets/cv.pdf"
+      cv: null
     }
   },
 
